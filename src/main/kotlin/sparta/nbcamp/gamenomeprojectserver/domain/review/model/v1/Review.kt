@@ -6,6 +6,9 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "review")
 class Review(
+    @Column(name = "game_name", nullable = false)
+    val gameName: String,
+
     @Column(name = "title", nullable = false)
     var title: String,
 
