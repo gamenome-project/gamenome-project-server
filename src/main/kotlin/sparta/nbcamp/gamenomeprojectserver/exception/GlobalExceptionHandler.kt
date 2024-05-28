@@ -13,4 +13,9 @@ class GlobalExceptionHandler {
     fun handleModelNotFoundException(e: ModelNotFoundException): ResponseEntity<ErrorDto> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorDto(e.message, "100"))
     }
+
+    @ExceptionHandler(DescriptionNotFoundException::class)
+    fun descriptionNotFoundException(e: DescriptionNotFoundException): ResponseEntity<ErrorDto>{
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorDto(e.message, "404"))
+    }
 }
