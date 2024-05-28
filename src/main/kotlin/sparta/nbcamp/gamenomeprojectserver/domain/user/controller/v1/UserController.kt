@@ -33,7 +33,7 @@ class UserController(
 
     @GetMapping("/users/{userId}/profile")
     fun getProfile(@PathVariable("userId") userId: Long): ResponseEntity<UserDto> {
-        return ResponseEntity.ok().body(userService.getUserProfile(userId))
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserProfile(userId))
     }
 
     @PutMapping("/users/{userId}/profile")
@@ -41,11 +41,11 @@ class UserController(
         @PathVariable("userId") userId: Long,
         @RequestBody request: UserUpdateProfileDto
     ): ResponseEntity<UserDto> {
-        return ResponseEntity.ok().body(userService.updateProfile(userId, request))
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(userId, request))
     }
 
     @DeleteMapping("/users/deactivate")
     fun deactivateUser(): ResponseEntity<Unit> {
-        return ResponseEntity.ok().body(userService.deactivateUser(userId))
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
     }
 }
