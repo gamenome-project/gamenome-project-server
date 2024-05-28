@@ -3,6 +3,8 @@ package sparta.nbcamp.gamenomeprojectserver.domain.comment.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
+import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 
 @Entity
