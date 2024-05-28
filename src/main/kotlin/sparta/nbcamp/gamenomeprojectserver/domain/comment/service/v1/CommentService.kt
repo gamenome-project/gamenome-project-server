@@ -46,7 +46,7 @@ class CommentService(
 
         if(result.isDeleted) throw ModelNotFoundException("comment", reviewId )
 
-        Comment.update(result)
+        result.update(result.content)
 
         return CommentResponseDto.from(result)
     }

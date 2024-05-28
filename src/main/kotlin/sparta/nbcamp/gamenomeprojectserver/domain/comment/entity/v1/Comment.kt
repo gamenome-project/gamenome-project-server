@@ -21,7 +21,7 @@ class Comment(
     val review: Review,
 
     @Column(name="content", nullable = false)
-    val content: String,
+    var content: String,
 
 
 
@@ -46,11 +46,7 @@ class Comment(
     @Column(name = "deleted_at", nullable = true)
     val deletedAt: LocalDateTime? = null
 
-    companion object{
-        fun update(comment: Comment): UpdateCommentRequestDto {
-            return UpdateCommentRequestDto(
-                content = comment.content,
-            )
-        }
+    fun update(comment: String) {
+        this.content = comment
     }
 }
