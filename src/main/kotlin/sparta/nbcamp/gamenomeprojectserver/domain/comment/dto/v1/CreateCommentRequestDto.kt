@@ -14,8 +14,7 @@ data class CreateCommentRequestDto(
             return Comment(
                 user = user,
                 review = review,
-                content = createCommentRequestDto.content,
-                createdAt = LocalDateTime.now(),
+                content = createCommentRequestDto.content
             )
         }
     }
