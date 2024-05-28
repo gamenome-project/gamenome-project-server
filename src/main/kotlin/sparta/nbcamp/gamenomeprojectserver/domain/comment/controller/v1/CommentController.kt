@@ -61,10 +61,10 @@ class CommentController(
     fun reportComment(
         @PathVariable reviewId: Long,
         @PathVariable commentId: Long,
-        @RequestBody reportCommentRequestDto: ReportCommentRequestDto,
+        @RequestBody reportReviewDto: ReportReviewDto,
     ):ResponseEntity<CommentReportResponseDto>{
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createReportComment(reviewId, commentId, reportCommentRequestDto))
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createReportComment(reviewId, commentId, reportReviewDto))
     }
 
 

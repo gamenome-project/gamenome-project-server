@@ -32,7 +32,7 @@ class CommentService(
     fun getCommentList(reviewId: Long,): List<CommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
         commentRepository.findByReviewId(reviewId)?: throw ModelNotFoundException("comment", reviewId )
-        val result = commentRepository.findAllByReviewIdNotDeletedAt(reviewId)
+        val result = commentRepository.findAll()
         return result.map{ CommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
@@ -47,7 +47,7 @@ class CommentService(
 
         if(result.isDeleted) throw ModelNotFoundException("comment", reviewId )
 
-        result.update(result.content)
+        result.update(updateCommentRequestDto.content)
 
         return CommentResponseDto.from(result)
     }
