@@ -3,6 +3,8 @@ package sparta.nbcamp.gamenomeprojectserver.domain.user.model
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
+import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
 import java.time.LocalDateTime
 
 @Entity
@@ -22,8 +24,8 @@ class User(
     var role: UserRole = UserRole.User,
 
     @CreationTimestamp
-    @Column(name = "registered_at", nullable = false)
-    val registeredAt: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "created_at", nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = true)
@@ -35,4 +37,35 @@ class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+
+    fun updateProfile(request: UserUpdateProfileDto) {
+        this.email = request.email
+        this.password = request.password
+        this.profile = Profile(
+            nickname = request.nickname,
+            aboutSummary = request.aboutSummary,
+            profileImageUrl = request.profileImageUrl
+        )
+    }
+
+    fun checkUpdatePermission(user: User): Boolean {
+        return this.id == user.id || user.role == UserRole.Admin
+    }
+
+    fun signIn() {
+        this.lastSignInAt = LocalDateTime.now()
+    }
+
+    companion object {
+        fun fromDto(request: SignUpDto): User {
+            return User(
+                email = request.email,
+                password = request.password,
+                profile = Profile(
+                    nickname = request.nickname,
+                    aboutSummary = request.aboutSummary,
+                )
+            )
+        }
+    }
 }

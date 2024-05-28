@@ -13,7 +13,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1.ReviewServic
 @RequestMapping("/api/v1/reviews")
 class ReviewController(
     private val reviewService: ReviewService
-) {
+){
 
     @PostMapping
     fun createReview(@RequestBody reviewCreateDTO: ReviewCreateDto): ResponseEntity<ReviewDto> {
