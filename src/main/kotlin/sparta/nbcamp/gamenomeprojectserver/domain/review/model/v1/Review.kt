@@ -21,10 +21,10 @@ class Review(
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = true)
     val updatedAt: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "deleted_at", nullable = false)
+    @Column(name = "deleted_at", nullable = true)
     var deletedAt: LocalDateTime = LocalDateTime.now()
 ) {
     @Id
