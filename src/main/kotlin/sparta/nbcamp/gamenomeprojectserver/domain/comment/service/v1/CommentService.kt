@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
@@ -45,7 +46,7 @@ class CommentService(
 
         if(result.isDeleted) throw ModelNotFoundException("comment", reviewId )
 
-        UpdateCommentRequestDto.update(result)
+        Comment.update(result)
 
         return CommentResponseDto.from(result)
     }
