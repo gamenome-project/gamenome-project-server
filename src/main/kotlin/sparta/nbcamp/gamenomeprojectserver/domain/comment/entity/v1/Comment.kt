@@ -23,9 +23,7 @@ class Comment(
     @Column(name="content", nullable = false)
     val content: String,
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+
 
 
 
@@ -36,6 +34,10 @@ class Comment(
 
     @Column(name = "is_deleted", nullable = false)
     var isDeleted: Boolean = false
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now()
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = true)
