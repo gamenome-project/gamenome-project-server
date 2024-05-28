@@ -8,7 +8,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
 
 @RestController
-@RequestMapping("/reviews/{reviewId}/comments")
+@RequestMapping("/api/v1/reviews/{reviewId}/comments")
 class CommentController(
     private val commentService: CommentService
 ):ApiV1MappingConfig() {
