@@ -23,7 +23,7 @@ class Comment(
     val content: String,
 
     @Column(name = "is_deleted", nullable = false)
-    val isDeleted: Boolean = false,
+    var isDeleted: Boolean = false,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
