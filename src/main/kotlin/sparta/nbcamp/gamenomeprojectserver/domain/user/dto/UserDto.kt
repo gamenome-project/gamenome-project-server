@@ -5,6 +5,6 @@ data class UserDto(
     val email: String,
     val nickname: String,
     val role: String,
-    val aboutSummary: String,
+    val aboutSummary: String?,
     val profileImageUrl: String?
 )
