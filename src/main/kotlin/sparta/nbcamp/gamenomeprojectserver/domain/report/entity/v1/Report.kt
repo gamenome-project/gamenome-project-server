@@ -10,8 +10,8 @@ import java.time.LocalDateTime
 @Table(name = "report")
 class Report(
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @Column(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
     @Column(name = "entity_id", nullable = false)
