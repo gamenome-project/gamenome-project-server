@@ -12,4 +12,6 @@ interface CommentRepository: JpaRepository<Comment, Long> {
 
 
     fun findByIdAndReviewId(reviewId: Long, commentId: Long): Comment
+
+    fun findByReviewIdOrNull(reviewId: Long): List<Comment>?
 }

@@ -5,20 +5,23 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
 class CommentService(
     private val commentRepository: CommentRepository,
+    private val reviewRepository: ReviewRepository,
     private val userService: UserService
 ) {
 
     @Transactional
     fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto): CommentResponseDto {
-
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        val result = commentRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("comment", reviewId )
+        val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+
+        val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, userService.TODO())
 
         return CommentResponseDto.from(result)
 
@@ -26,7 +29,7 @@ class CommentService(
 
     fun getCommentList(reviewId: Long,): List<CommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
-        commentRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("comment", reviewId )
+        commentRepository.findByReviewIdOrNull(reviewId)?: throw ModelNotFoundException("comment", reviewId )
         val result = commentRepository.findAllByReviewIdNotDeletedAt(reviewId)
         return result.map{ CommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
@@ -38,7 +41,7 @@ class CommentService(
     ): CommentResponseDto {
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
-        commentRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("comment", reviewId )
+        commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", reviewId )
 
         //TODO("조회 시에 Delete 된 객체는 업데이트 하지 않음 deletedAt != null 일 경우 업데이트 X")
         val result = commentRepository.findByIdAndReviewId(reviewId, commentId)
@@ -54,7 +57,11 @@ class CommentService(
     fun deleteComment(reviewId: Long, commentId: Long,){
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
+        commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", reviewId )
+
         //TODO("아이디 삭제 시에 put 이벤트 발생 으로 deletedAt 상태를 업데이트")
+
+
         //TODO("deleteComment 이벤트 발생 시에 deletedAt이 업데이트 된 데이터가 특정 개수를 넘어가게 되면 delete 이벤트 발생")
 
         TODO()
