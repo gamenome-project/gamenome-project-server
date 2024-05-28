@@ -3,6 +3,8 @@ package sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtPlugin
+import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
@@ -13,7 +15,8 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
 class UserServiceImpl(
-    val userRepository: UserRepository
+    val userRepository: UserRepository,
+    val jwtPlugin: JwtPlugin
 ) : UserService {
 
     @Transactional
@@ -28,15 +31,17 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun signIn(request: SignInDto): UserDto {
+    override fun signIn(request: SignInDto): JwtResponseDto {
         val user = userRepository.findByEmail(request.email)
             ?: throw IllegalStateException("User not found with email")
 
         // TODO: 패스워드 체크
 
+        val accessToken = jwtPlugin.generateAccessToken("userId", user.id ?: throw RuntimeException("User id is invalid"))
+
         user.signIn()
 
-        return UserDto.fromEntity(user)
+        return JwtResponseDto(accessToken)
     }
 
     override fun getUserProfile(userId: Long): UserDto {
