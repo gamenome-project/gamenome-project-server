@@ -4,9 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import sparta.nbcamp.gamenomeprojectserver.domain.ApiV1MappingConfig
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.CommentResponseDto
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.CreateCommentRequestDto
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.UpdateCommentRequestDto
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
 
 @RestController
@@ -58,5 +56,16 @@ class CommentController(
             .status(HttpStatus.OK)
             .body(commentService.updateComment(reviewId, commentId, updateCommentRequestDto))
     }
+
+    @PostMapping("/{commentId}/report")
+    fun reportComment(
+        @PathVariable reviewId: Long,
+        @PathVariable commentId: Long,
+        @RequestBody reportCommentRequestDto: ReportCommentRequestDto,
+    ):ResponseEntity<CommentReportResponseDto>{
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createReportComment(reviewId, commentId, reportCommentRequestDto))
+    }
+
 
 }
