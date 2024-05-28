@@ -3,17 +3,17 @@ package sparta.nbcamp.gamenomeprojectserver.domain.user.controller.v1
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import sparta.nbcamp.gamenomeprojectserver.domain.ApiV1MappingConfig
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 
+@RequestMapping("api/v1")
 @RestController
 class UserController(
     val userService: UserService
-) : ApiV1MappingConfig() {
+){
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp())

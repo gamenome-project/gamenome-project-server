@@ -3,7 +3,6 @@ package sparta.nbcamp.gamenomeprojectserver.domain.review.controller.v1
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import sparta.nbcamp.gamenomeprojectserver.domain.ApiV1MappingConfig
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
@@ -11,10 +10,10 @@ import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1.ReviewService
 
 @RestController
-@RequestMapping("/reviews")
+@RequestMapping("/api/v1/reviews")
 class ReviewController(
     private val reviewService: ReviewService
-) : ApiV1MappingConfig() {
+){
 
     @PostMapping
     fun createReview(@RequestBody reviewCreateDTO: ReviewCreateDto): ResponseEntity<ReviewDto> {

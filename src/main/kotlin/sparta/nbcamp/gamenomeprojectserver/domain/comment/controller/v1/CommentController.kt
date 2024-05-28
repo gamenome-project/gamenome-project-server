@@ -3,7 +3,6 @@ package sparta.nbcamp.gamenomeprojectserver.domain.comment.controller.v1
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import sparta.nbcamp.gamenomeprojectserver.domain.ApiV1MappingConfig
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
 
@@ -11,7 +10,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentServ
 @RequestMapping("/api/v1/reviews/{reviewId}/comments")
 class CommentController(
     private val commentService: CommentService
-):ApiV1MappingConfig() {
+) {
 
     @PostMapping
     fun createComment(
