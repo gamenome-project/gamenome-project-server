@@ -9,11 +9,11 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 
+@RequestMapping("api/v1")
 @RestController
-@RequestMapping("/api/v1")
 class UserController(
     val userService: UserService
-) {
+){
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
