@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import sparta.nbcamp.gamenomeprojectserver.domain.ApiV1MappingConfig
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDTO
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDTO
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDTO
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDTO
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1.ReviewService
 
 @RestController
@@ -17,7 +17,7 @@ class ReviewController(
 ) : ApiV1MappingConfig() {
 
     @PostMapping
-    fun createReview(@RequestBody reviewCreateDTO: ReviewCreateDTO): ResponseEntity<ReviewDTO> {
+    fun createReview(@RequestBody reviewCreateDTO: ReviewCreateDto): ResponseEntity<ReviewDto> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(reviewService.createReview(reviewCreateDTO))
@@ -25,7 +25,7 @@ class ReviewController(
     }
 
     @GetMapping()
-    fun getReviewList(): ResponseEntity<List<ReviewDTO>> {
+    fun getReviewList(): ResponseEntity<List<ReviewDto>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(reviewService.getReviewList())
@@ -34,8 +34,8 @@ class ReviewController(
     @PutMapping("/{reviewId}")
     fun updateReview(
         @PathVariable reviewId: Long,
-        @RequestBody reviewUpdateDTO: ReviewUpdateDTO
-    ): ResponseEntity<ReviewDTO> {
+        @RequestBody reviewUpdateDTO: ReviewUpdateDto
+    ): ResponseEntity<ReviewDto> {
 
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -53,7 +53,7 @@ class ReviewController(
     @GetMapping("/{reviewId}")
     fun getReview(
         @PathVariable reviewId: Long
-    ): ResponseEntity<ReviewDTO> {
+    ): ResponseEntity<ReviewDto> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(reviewService.getReview(reviewId))
@@ -62,15 +62,15 @@ class ReviewController(
     @PostMapping("/{reviewId}/report")
     fun reportReview(
         @PathVariable reviewId: Long,
-        @RequestBody reviewReportDTO: ReviewReportDTO,
-    ): ResponseEntity<ReviewDTO> {
+        @RequestBody reviewReportDTO: ReviewReportDto,
+    ): ResponseEntity<ReviewDto> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(reviewService.reportReview(reviewId, reviewReportDTO))
     }
 
     @GetMapping("/report")
-    fun getReviewReport(): ResponseEntity<List<ReviewDTO>> {
+    fun getReviewReport(): ResponseEntity<List<ReviewDto>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(reviewService.getReviewReport())

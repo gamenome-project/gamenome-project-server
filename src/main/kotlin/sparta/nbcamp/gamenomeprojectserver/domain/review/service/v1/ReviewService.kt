@@ -1,22 +1,22 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1
 
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDTO
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDTO
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDTO
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDTO
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
 
 interface ReviewService {
-    fun createReview(reviewCreateDTO: ReviewCreateDTO): ReviewDTO
+    fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto
 
-    fun getReviewList(): List<ReviewDTO>
+    fun getReviewList(): List<ReviewDto>
 
-    fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDTO): ReviewDTO
+    fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto): ReviewDto
 
     fun deleteReview(reviewId: Long)
 
-    fun getReview(reviewId: Long): ReviewDTO
+    fun getReview(reviewId: Long): ReviewDto
 
-    fun reportReview(reviewId: Long, reviewReportDTO: ReviewReportDTO): ReviewDTO
+    fun reportReview(reviewId: Long, reviewReportDTO: ReviewReportDto): ReviewDto
 
-    fun getReviewReport(): List<ReviewDTO>
+    fun getReviewReport(): List<ReviewDto>
 }
