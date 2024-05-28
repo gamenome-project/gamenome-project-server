@@ -16,24 +16,24 @@ class UserController(
 ) {
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp())
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
     }
 
     @PostMapping("/signin")
     fun signIn(@RequestBody request: SignInDto): ResponseEntity<UserDto> {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.signIn())
+        return ResponseEntity.status(HttpStatus.OK).body(userService.signIn(request))
     }
 
     @PostMapping("/signout")
     fun signOut(): ResponseEntity<Unit> {
-        // TODO: signOut Logic
+        // TODO: signOut Logic (세션은 Service 안가고 Controller에서 바로 끊었는데 JWT는 아직 불확실함)
 
         return ResponseEntity.status(HttpStatus.OK).build()
     }
 
     @GetMapping("/users/{userId}/profile")
     fun getProfile(@PathVariable("userId") userId: Long): ResponseEntity<UserDto> {
-        return ResponseEntity.ok().body(userService.getUserProfile())
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserProfile(userId))
     }
 
     @PutMapping("/users/{userId}/profile")
@@ -41,11 +41,11 @@ class UserController(
         @PathVariable("userId") userId: Long,
         @RequestBody request: UserUpdateProfileDto
     ): ResponseEntity<UserDto> {
-        return ResponseEntity.ok().body(userService.updateProfile())
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(userId, request))
     }
 
     @DeleteMapping("/users/deactivate")
     fun deactivateUser(): ResponseEntity<Unit> {
-        return ResponseEntity.ok().body(userService.deactivateUser())
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
     }
 }
