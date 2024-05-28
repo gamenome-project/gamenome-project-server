@@ -1,18 +1,25 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1
 
 import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
+import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
-class CommentService {
+class CommentService(
+    private val commentRepository: CommentRepository
+) {
 
     @Transactional
     fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto): CommentResponseDto {
-        //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        //TODO("리뷰 아이디에 대한 댓글 작성")
 
-        TODO()
+        //TODO("유저 로그인 검증 및 블랙 리스트 검증")
+        val result = commentRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("comment", reviewId )
+
+        return CommentResponseDto.from(result)
+
     }
 
     fun getCommentList(reviewId: Long,): List<CommentResponseDto>{
