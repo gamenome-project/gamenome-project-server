@@ -17,7 +17,7 @@ class ReviewServiceImpl(
 ) : ReviewService {
     @Transactional
     override fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto {
-        val review = Review(reviewCreateDTO.gameName, reviewCreateDTO.title, reviewCreateDTO.description)
+        val review = Review.fromDto(reviewCreateDTO)
         return ReviewDto.from(reviewRepository.save(review))
     }
 

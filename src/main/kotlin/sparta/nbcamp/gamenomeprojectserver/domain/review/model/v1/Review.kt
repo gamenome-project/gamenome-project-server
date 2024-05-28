@@ -3,6 +3,7 @@ package sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
 import java.time.LocalDateTime
 
@@ -40,5 +41,15 @@ class Review(
         gameName = reviewUpdateDto.gameName
         title = reviewUpdateDto.title
         description = reviewUpdateDto.description
+    }
+
+    companion object {
+        fun fromDto(reviewCreateDto: ReviewCreateDto): Review {
+            return Review(
+                gameName = reviewCreateDto.gameName,
+                title = reviewCreateDto.title,
+                description = reviewCreateDto.description,
+            )
+        }
     }
 }
