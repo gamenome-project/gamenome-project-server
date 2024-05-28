@@ -3,6 +3,7 @@ package sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import org.springframework.boot.context.properties.bind.DefaultValue
 import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
@@ -22,23 +23,24 @@ class Comment(
     @Column(name="content", nullable = false)
     val content: String,
 
-    @Column(name = "is_deleted", nullable = false)
-    var isDeleted: Boolean = false,
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = true)
-    val updatedAt: LocalDateTime?,
 
-    @Column(name = "deleted_at", nullable = true)
-    val deletedAt: LocalDateTime? = null
 
 ) {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
+
+    @Column(name = "is_deleted", nullable = false)
+    var isDeleted: Boolean = false
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true)
+    val updatedAt: LocalDateTime? = null
+
+    @Column(name = "deleted_at", nullable = true)
+    val deletedAt: LocalDateTime? = null
 }

@@ -15,10 +15,7 @@ data class CreateCommentRequestDto(
                 user = user,
                 review = review,
                 content = createCommentRequestDto.content,
-                isDeleted = false,
                 createdAt = LocalDateTime.now(),
-                updatedAt = null,
-                deletedAt = null
             )
         }
     }
