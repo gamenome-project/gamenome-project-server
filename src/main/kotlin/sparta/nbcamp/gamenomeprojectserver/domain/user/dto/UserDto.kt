@@ -2,7 +2,9 @@ package sparta.nbcamp.gamenomeprojectserver.domain.user.dto
 
 data class UserDto(
     val id: Long,
-    val nickname: String,
     val email: String,
-    val isAdmin: Boolean,
+    val nickname: String,
+    val role: String,
+    val aboutSummary: String,
+    val profileImageUrl: String?
 )
