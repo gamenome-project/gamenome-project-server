@@ -2,6 +2,7 @@ package sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import sparta.nbcamp.gamenomeprojectserver.domain.report.dto.v1.ReportReviewDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 
@@ -33,4 +34,5 @@ class Report(
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
+
 }
