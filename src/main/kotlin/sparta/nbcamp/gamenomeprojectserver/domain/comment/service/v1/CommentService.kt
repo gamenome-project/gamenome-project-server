@@ -23,7 +23,8 @@ class CommentService(
     private val userService: UserService,
     private val reactionService: ReactionService,
     private val userRepository: UserRepository,
-    ) {
+    private val reportService: ReportService,
+) {
 
     @Transactional
     fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
