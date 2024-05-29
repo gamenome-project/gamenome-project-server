@@ -3,9 +3,10 @@ package sparta.nbcamp.gamenomeprojectserver.domain.user.controller.v1
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
+import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 
@@ -20,7 +21,7 @@ class UserController(
     }
 
     @PostMapping("/signin")
-    fun signIn(@RequestBody request: SignInDto): ResponseEntity<UserDto> {
+    fun signIn(@RequestBody request: SignInDto): ResponseEntity<JwtResponseDto> {
         return ResponseEntity.status(HttpStatus.OK).body(userService.signIn(request))
     }
 
