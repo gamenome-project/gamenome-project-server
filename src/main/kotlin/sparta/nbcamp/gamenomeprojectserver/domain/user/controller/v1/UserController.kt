@@ -14,7 +14,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 @RestController
 class UserController(
     val userService: UserService
-){
+) {
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
@@ -48,5 +48,10 @@ class UserController(
     @DeleteMapping("/users/deactivate")
     fun deactivateUser(): ResponseEntity<Unit> {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
+    }
+
+    @GetMapping("/users/checkNickname")
+    fun checkNicknameDuplicate(@RequestParam nickname: String): ResponseEntity<Boolean> {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.isNicknameDuplicate(nickname))
     }
 }

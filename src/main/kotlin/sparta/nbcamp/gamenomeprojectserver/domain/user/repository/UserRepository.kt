@@ -5,4 +5,5 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 
 interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?
+    fun findByProfileNickname(nickname: String): User?
 }
