@@ -72,13 +72,7 @@ class CommentService(
         reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("review", reviewId)
         val result = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", reviewId)
 
-        result.isDeleted = true
-
-        commentRepository.save(result)
-
-        //TODO("deleteComment 이벤트 발생 시에 deletedAt이 업데이트 된 데이터가 특정 개수를 넘어가게 되면 delete 이벤트 발생")
-
-        TODO()
+        commentRepository.delete(result)
     }
 
     fun createReportComment(
