@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
@@ -26,19 +27,17 @@ class CommentService(
 
     @Transactional
     fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
-
         val user = userService.getUserIdFromToken(token)
 
         val userResult = userRepository.findByIdOrNull(user)?: throw ModelNotFoundException("User", user)
 
         val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
 
-        val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, userResult)
+        val result = Comment.fromDto(createCommentRequestDto, reviewResult, userResult)
 
         commentRepository.save(result)
 
         return CommentResponseDto.from(result)
-
     }
 
     fun getCommentList(reviewId: Long,): List<CommentResponseDto>{

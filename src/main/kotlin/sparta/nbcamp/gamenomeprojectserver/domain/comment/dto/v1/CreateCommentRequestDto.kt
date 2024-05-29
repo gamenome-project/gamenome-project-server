@@ -5,16 +5,8 @@ import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 
 data class CreateCommentRequestDto(
-    val content: String,
+    override val content: String,
+
     val stars: Double,
-){
-    companion object{
-        fun create(createCommentRequestDto: CreateCommentRequestDto, review : Review, user: User): Comment {
-            return Comment(
-                user = user,
-                review = review,
-                content = createCommentRequestDto.content,
-            )
-        }
-    }
-}
+): CommentContentValidatableDto(content)
+

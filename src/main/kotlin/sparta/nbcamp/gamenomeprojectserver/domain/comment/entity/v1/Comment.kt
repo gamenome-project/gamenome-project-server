@@ -3,13 +3,14 @@ package sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.CreateCommentRequestDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "comment")
-class Comment(
+class Comment private constructor(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val user: User,
@@ -41,5 +42,22 @@ class Comment(
 
     fun update(comment: String) {
         this.content = comment
+
+        this.validate()
+    }
+
+    private fun validate() {
+        require(this.content.isNotBlank()) { "Content must not be blank" }
+        require(this.content.length <= 100) { "Content must be 100 characters or less" }
+    }
+
+    companion object{
+        fun fromDto(createCommentRequestDto: CreateCommentRequestDto, review : Review, user: User): Comment {
+            return Comment(
+                user = user,
+                review = review,
+                content = createCommentRequestDto.content
+            ).apply { this.validate() }
+        }
     }
 }
