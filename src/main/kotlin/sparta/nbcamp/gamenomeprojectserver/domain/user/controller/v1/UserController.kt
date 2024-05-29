@@ -47,7 +47,13 @@ class UserController(
 
     @DeleteMapping("/users/deactivate")
     fun deactivateUser(): ResponseEntity<Unit> {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
+        TODO()
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
+    }
+
+    @GetMapping("/token/checkUserId")
+    fun checkUserId(@RequestParam token: String): ResponseEntity<Long> {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserIdFromToken(token))
     }
 
     @GetMapping("/users/checkNickname")
