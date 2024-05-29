@@ -6,8 +6,13 @@ import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.dto.v1.ReportReviewDto
+import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtPlugin
+import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
@@ -16,15 +21,20 @@ class CommentService(
     private val commentRepository: CommentRepository,
     private val reviewRepository: ReviewRepository,
     private val userService: UserService,
-
-) {
+    private val reactionService: ReactionService,
+    private val userRepository: UserRepository,
+    ) {
 
     @Transactional
-    fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto): CommentResponseDto {
-        //TODO("유저 로그인 검증 및 블랙 리스트 검증")
+    fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
+
+        val user = userService.getUserIdFromToken(token)
+
+        val userResult = userRepository.findByIdOrNull(user)?: throw ModelNotFoundException("User", user)
+
         val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
 
-        val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, TODO())
+        val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, userResult)
 
         return CommentResponseDto.from(result)
 
@@ -75,6 +85,13 @@ class CommentService(
         //TODO("CommentReportResponseDto 로 신고 정보 리턴")
 
         TODO()
+    }
+
+    @Transactional
+    fun commentLikeReaction(reviewId: Long, commentId: Long) {
+        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+        val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
+        reactionService.update(commentResult, ReactionType.Like)
     }
 
 }

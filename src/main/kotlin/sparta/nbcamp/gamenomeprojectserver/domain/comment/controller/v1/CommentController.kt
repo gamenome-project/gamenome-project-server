@@ -17,11 +17,12 @@ class CommentController(
     fun createComment(
         @PathVariable reviewId: Long,
         @RequestBody createCommentRequestDto: CreateCommentRequestDto,
+        @RequestParam token: String,
     ): ResponseEntity<CommentResponseDto>{
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(commentService.createComment(reviewId, createCommentRequestDto))
+            .body(commentService.createComment(reviewId, createCommentRequestDto, token))
     }
 
     @GetMapping
@@ -49,7 +50,8 @@ class CommentController(
     fun updateComment(
         @PathVariable reviewId: Long,
         @PathVariable commentId: Long,
-        @RequestBody updateCommentRequestDto: UpdateCommentRequestDto
+        @RequestBody updateCommentRequestDto: UpdateCommentRequestDto,
+        @RequestHeader("Authorization") token: String,
     ):ResponseEntity<CommentResponseDto>{
 
         return ResponseEntity
@@ -65,6 +67,18 @@ class CommentController(
     ):ResponseEntity<CommentReportResponseDto>{
 
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createReportComment(reviewId, commentId, reportReviewDto))
+    }
+
+    @PostMapping("/{commentId}/like")
+    fun commentLikeReaction(
+        @PathVariable reviewId: Long,
+        @PathVariable commentId: Long,
+        @RequestParam token: String,
+    ):ResponseEntity<Unit>{
+
+        commentService.commentLikeReaction(reviewId, commentId)
+
+        return ResponseEntity.status(HttpStatus.OK).build()
     }
 
 
