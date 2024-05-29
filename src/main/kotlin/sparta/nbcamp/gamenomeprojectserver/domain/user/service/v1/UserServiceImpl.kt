@@ -1,6 +1,7 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1
 
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtPlugin
@@ -16,16 +17,17 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 @Service
 class UserServiceImpl(
     val userRepository: UserRepository,
-    val jwtPlugin: JwtPlugin
+    val jwtPlugin: JwtPlugin,
+    val passwordEncoder: PasswordEncoder
 ) : UserService {
 
     @Transactional
     override fun signUp(request: SignUpDto): UserDto {
-        // TODO: 패스워드 암호화
+        val encryptedPassword = passwordEncoder.encode(request.password)
 
         return UserDto.fromEntity(
             userRepository.save(
-                User.fromDto(request)
+                User.fromDto(request.copy(password = encryptedPassword))
             )
         )
     }
@@ -35,7 +37,7 @@ class UserServiceImpl(
         val user = userRepository.findByEmail(request.email)
             ?: throw IllegalStateException("User not found with email")
 
-        // TODO: 패스워드 체크
+        if (!passwordEncoder.matches(request.password, user.password)) throw IllegalStateException("Password is incorrect")
 
         val accessToken = jwtPlugin.generateAccessToken("userId", user.id ?: throw RuntimeException("User id is invalid"))
 
