@@ -10,10 +10,10 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "app_user")
 class User(
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", length = 255, unique = true, nullable = false)
     var email: String,
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", length = 255, nullable = false)
     var password: String,
 
     @Embedded
