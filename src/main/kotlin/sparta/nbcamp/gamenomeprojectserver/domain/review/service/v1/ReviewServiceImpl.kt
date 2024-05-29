@@ -1,5 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1
 
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -27,8 +28,8 @@ class ReviewServiceImpl(
         return ReviewDto.from(reviewRepository.save(review))
     }
 
-    override fun getReviewList(pageable: Pageable): List<ReviewDto> {
-        val foundAllReview = reviewRepository.findAll()
+    override fun getReviewPage(pageable: Pageable): Page<ReviewDto> {
+        val foundAllReview = reviewRepository.findAllBy(pageable)
         return foundAllReview.map { ReviewDto.from(it) }
     }
 
