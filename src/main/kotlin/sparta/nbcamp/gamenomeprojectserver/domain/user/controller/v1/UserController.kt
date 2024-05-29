@@ -50,4 +50,9 @@ class UserController(
         TODO()
 //        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
     }
+
+    @GetMapping("/token/checkUserId")
+    fun checkUserId(@RequestParam token: String): ResponseEntity<Long> {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserIdFromToken(token))
+    }
 }
