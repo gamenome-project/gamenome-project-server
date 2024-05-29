@@ -65,10 +65,10 @@ class CommentService(
     }
 
     @Transactional
-    fun deleteComment(reviewId: Long, commentId: Long,){
+    fun deleteComment(reviewId: Long, commentId: Long) {
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
-        val result = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", reviewId )
+        reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("review", reviewId)
+        val result = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", reviewId)
 
         result.isDeleted = true
 
@@ -79,13 +79,21 @@ class CommentService(
         TODO()
     }
 
-    fun createReportComment(reviewId: Long, commentId: Long, reportReviewDto: ReportReviewDto): CommentReportResponseDto {
-        //TODO("유저 로그인 검증")
-        //TODO("신고 내용 작성 후에 추가")
-        //TODO("신고 시에 put 이벤트 발생 으로 deletedAt 상태로 업데이트")
-        //TODO("CommentReportResponseDto 로 신고 정보 리턴")
+    fun createReportComment(
+        reviewId: Long,
+        commentId: Long,
+        reportCommentRequestDto: ReportCommentRequestDto
+    ): CommentReportResponseDto {
 
-        TODO()
+        val comment = commentRepository.findByIdAndReviewId(reviewId, commentId)
+        val user = userRepository.findByIdOrNull(reportCommentRequestDto.userId) ?: throw ModelNotFoundException(
+            "User",
+            reportCommentRequestDto.userId
+        )
+        val report = reportService.createCommentReport(user, commentId, EntityType.Comment, reportCommentRequestDto)
+        commentRepository.save(comment)
+
+        return CommentReportResponseDto.from(report)
     }
 
     @Transactional
