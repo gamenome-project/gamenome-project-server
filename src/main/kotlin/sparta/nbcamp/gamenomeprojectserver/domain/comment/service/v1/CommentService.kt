@@ -103,7 +103,7 @@ class CommentService(
         val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
         val userId = userService.getUserIdFromToken(token)
 
-        reactionService.updateLike(commentResult, ReactionType.Like, userId)
+        reactionService.update(commentResult, ReactionType.Like, userId)
     }
 
     fun commentDisLikeReaction(reviewId: Long, commentId: Long, token: String) {
@@ -112,7 +112,7 @@ class CommentService(
         val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
         val userId = userService.getUserIdFromToken(token)
 
-        reactionService.updateDisLike(commentResult, ReactionType.DisLike, userId)
+        reactionService.update(commentResult, ReactionType.DisLike, userId)
     }
 
 }

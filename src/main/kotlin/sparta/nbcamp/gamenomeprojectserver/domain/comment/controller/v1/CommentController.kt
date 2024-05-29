@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
-import sparta.nbcamp.gamenomeprojectserver.domain.report.dto.v1.ReportReviewDto
 
 @RestController
 @RequestMapping("/api/v1/reviews/{reviewId}/comments")
@@ -51,7 +50,7 @@ class CommentController(
         @PathVariable reviewId: Long,
         @PathVariable commentId: Long,
         @RequestBody updateCommentRequestDto: UpdateCommentRequestDto,
-        @RequestHeader("Authorization") token: String,
+        @RequestParam token: String,
     ):ResponseEntity<CommentResponseDto>{
 
         return ResponseEntity
