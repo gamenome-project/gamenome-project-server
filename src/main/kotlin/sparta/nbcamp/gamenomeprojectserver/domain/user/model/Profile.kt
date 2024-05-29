@@ -5,12 +5,12 @@ import jakarta.persistence.Embeddable
 
 @Embeddable
 data class Profile(
-    @Column(name = "nickname", unique = true, nullable = false)
+    @Column(name = "nickname", length = 255, unique = true, nullable = false)
     val nickname: String,
 
-    @Column(name = "about_summary", nullable = true)
+    @Column(name = "about_summary", length = 255, nullable = true)
     val aboutSummary: String? = null,
 
-    @Column(name = "profile_image_url", nullable = true)
+    @Column(name = "profile_image_url", columnDefinition = "text", nullable = true)
     val profileImageUrl: String? = null
 )

@@ -22,7 +22,7 @@ class Report(
     @Column(name = "entity_type", nullable = false)
     val entityType: EntityType,
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", columnDefinition = "text", nullable = false)
     val description: String,
 
 
