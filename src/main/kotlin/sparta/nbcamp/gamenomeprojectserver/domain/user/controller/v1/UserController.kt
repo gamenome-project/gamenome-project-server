@@ -55,4 +55,9 @@ class UserController(
     fun checkUserId(@RequestParam token: String): ResponseEntity<Long> {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserIdFromToken(token))
     }
+
+    @GetMapping("/users/checkNickname")
+    fun checkNicknameDuplicate(@RequestParam nickname: String): ResponseEntity<Boolean> {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.isNicknameDuplicate(nickname))
+    }
 }

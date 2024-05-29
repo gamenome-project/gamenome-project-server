@@ -15,4 +15,5 @@ interface UserService {
     fun deactivateUser(userId: Long)
     fun isValidToken(token: String): Boolean
     fun getUserIdFromToken(token: String): Long
+    fun isNicknameDuplicate(nickname: String): Boolean
 }

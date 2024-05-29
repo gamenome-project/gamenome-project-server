@@ -78,4 +78,8 @@ class UserServiceImpl(
     override fun getUserIdFromToken(token: String): Long {
         return (jwtPlugin.validateToken(token).getOrNull()?.payload?.get("userId") as Int).toLong()
     }
+
+    override fun isNicknameDuplicate(nickname: String): Boolean {
+        return userRepository.findByProfileNickname(nickname) != null
+    }
 }
