@@ -4,13 +4,13 @@ import org.springframework.data.domain.Sort
 
 
 enum class CommentSort {
-    CreateAtAsc,
-    CreateAtDesc,
+    CreatedAtAsc,
+    CreatedAtDesc,
 }
 
 fun CommentSort.setSortType(): Sort{
     return when(this){
-        CommentSort.CreateAtAsc -> Sort.by("created_at").ascending()
-        CommentSort.CreateAtDesc -> Sort.by("created_at").descending()
+        CommentSort.CreatedAtAsc -> Sort.by("createdAt").ascending()
+        CommentSort.CreatedAtDesc -> Sort.by("createdAt").descending()
     }
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "review")
-class Review(
+class Review private constructor(
     @Column(name = "game_name", columnDefinition = "text", nullable = false)
     var gameName: String,
 
@@ -41,6 +41,19 @@ class Review(
         gameName = reviewUpdateDto.gameName
         title = reviewUpdateDto.title
         description = reviewUpdateDto.description
+
+        this.validate()
+    }
+
+    private fun validate() {
+        require(gameName.isNotBlank()) { "Game name cannot be blank" }
+        require(gameName.length <= 100) { "Game name must be 100 characters or less" }
+
+        require(title.isNotBlank()) { "Title cannot be blank" }
+        require(title.length <= 200) { "Title must be 200 characters or less" }
+
+        require(description.isNotBlank()) { "Description must not be blank" }
+        require(description.length <= 2000) { "Description must be 2000 characters or less" }
     }
 
     companion object {
@@ -49,7 +62,7 @@ class Review(
                 gameName = reviewCreateDto.gameName,
                 title = reviewCreateDto.title,
                 description = reviewCreateDto.description,
-            )
+            ).apply { this.validate() }
         }
     }
 }
