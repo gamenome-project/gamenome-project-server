@@ -15,7 +15,8 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 class CommentService(
     private val commentRepository: CommentRepository,
     private val reviewRepository: ReviewRepository,
-    private val userService: UserService
+    private val userService: UserService,
+
 ) {
 
     @Transactional
