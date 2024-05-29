@@ -59,7 +59,7 @@ class CommentController(
         @PathVariable reviewId: Long,
         @PathVariable commentId: Long,
         @RequestBody updateCommentRequestDto: UpdateCommentRequestDto,
-        @RequestHeader("Authorization") token: String,
+        @RequestParam token: String,
     ):ResponseEntity<CommentResponseDto>{
 
         return ResponseEntity

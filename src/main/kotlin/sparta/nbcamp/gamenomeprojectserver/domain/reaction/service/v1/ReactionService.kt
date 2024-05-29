@@ -16,7 +16,7 @@ class ReactionService(
 ) {
 
 
-    fun updateLike(comment: Comment, reactionType: ReactionType, userId: Long){
+    fun update(comment: Comment, reactionType: ReactionType, userId: Long){
         val result = reactionRepository.findByCommentIdAndReaction(comment.id!!, reactionType)
         val user = userRepository.findByIdOrNull(userId)?: throw ModelNotFoundException("User", userId)
         if (result == null) {
@@ -27,27 +27,10 @@ class ReactionService(
                     reaction = reactionType
                 )
             )
-        }else{
-            if(result.reaction == ReactionType.Like) reactionRepository.delete(result)
-            else result.reaction = ReactionType.Like
-        }
+        }else if(reactionType == result.reaction) reactionRepository.delete(result)
+        else result.reaction = reactionType
+
 
     }
 
-    fun updateDisLike(comment: Comment, reactionType: ReactionType, userId: Long) {
-        val result = reactionRepository.findByCommentIdAndReaction(comment.id!!, reactionType)
-        val user = userRepository.findByIdOrNull(userId)?: throw ModelNotFoundException("User", userId)
-        if (result == null) {
-            reactionRepository.save(
-                Reaction(
-                    user = user,
-                    comment = comment,
-                    reaction = reactionType
-                )
-            )
-        }else{
-            if(result.reaction == ReactionType.DisLike) reactionRepository.delete(result)
-            else result.reaction = ReactionType.DisLike
-        }
-    }
 }
