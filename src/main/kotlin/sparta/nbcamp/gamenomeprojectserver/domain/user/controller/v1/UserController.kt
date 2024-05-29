@@ -47,6 +47,7 @@ class UserController(
 
     @DeleteMapping("/users/deactivate")
     fun deactivateUser(): ResponseEntity<Unit> {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
+        TODO()
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
     }
 }
