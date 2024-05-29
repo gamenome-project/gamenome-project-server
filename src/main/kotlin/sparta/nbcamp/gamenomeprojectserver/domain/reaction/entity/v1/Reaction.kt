@@ -8,7 +8,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 @Table(name = "reaction")
 class Reaction(
 
-    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
