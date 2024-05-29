@@ -1,12 +1,19 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.review.controller.v1
 
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.etc.CommentSort
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.etc.ReviewSort
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.etc.setSortType
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.etc.ReviewSort
+import sparta.nbcamp.gamenomeprojectserver.domain.review.etc.setSortType
 import sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1.ReviewService
 
 @RestController
@@ -24,10 +31,17 @@ class ReviewController(
     }
 
     @GetMapping()
-    fun getReviewList(): ResponseEntity<List<ReviewDto>> {
+    fun getReviewList(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int,
+        @RequestParam(defaultValue = "CreatedAtAsc") sort: ReviewSort
+    ): ResponseEntity<List<ReviewDto>> {
+        val pageable: Pageable = PageRequest.of(page, size, sort.setSortType())
+
+
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(reviewService.getReviewList())
+            .body(reviewService.getReviewList(pageable))
     }
 
     @PutMapping("/{reviewId}")
