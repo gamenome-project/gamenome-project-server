@@ -4,11 +4,9 @@ import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
-import sparta.nbcamp.gamenomeprojectserver.domain.report.dto.v1.ReportReviewDto
 import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
@@ -37,6 +35,8 @@ class CommentService(
 
         val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, userResult)
 
+        commentRepository.save(result)
+
         return CommentResponseDto.from(result)
 
     }
@@ -44,7 +44,7 @@ class CommentService(
     fun getCommentList(reviewId: Long,): List<CommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
         commentRepository.findByReviewId(reviewId)?: throw ModelNotFoundException("comment", reviewId )
-        val result = commentRepository.findAll()
+        val result = commentRepository.findAllByReviewId(reviewId)
         return result.map{ CommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
@@ -97,10 +97,22 @@ class CommentService(
     }
 
     @Transactional
-    fun commentLikeReaction(reviewId: Long, commentId: Long) {
+    fun commentLikeReaction(reviewId: Long, commentId: Long, token: String) {
         reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+
         val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
-        reactionService.update(commentResult, ReactionType.Like)
+        val userId = userService.getUserIdFromToken(token)
+
+        reactionService.updateLike(commentResult, ReactionType.Like, userId)
+    }
+
+    fun commentDisLikeReaction(reviewId: Long, commentId: Long, token: String) {
+        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+
+        val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
+        val userId = userService.getUserIdFromToken(token)
+
+        reactionService.updateDisLike(commentResult, ReactionType.DisLike, userId)
     }
 
 }

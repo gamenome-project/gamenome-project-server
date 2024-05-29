@@ -1,31 +1,53 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1
 
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.Reaction
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.repository.v1.ReactionRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
+import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
 class ReactionService(
-    private val reactionRepository: ReactionRepository
+    private val reactionRepository: ReactionRepository,
+    private val userRepository: UserRepository,
 ) {
 
 
-    fun update(comment: Comment, reactionType: ReactionType){
+    fun updateLike(comment: Comment, reactionType: ReactionType, userId: Long){
         val result = reactionRepository.findByCommentIdAndReaction(comment.id!!, reactionType)
+        val user = userRepository.findByIdOrNull(userId)?: throw ModelNotFoundException("User", userId)
         if (result == null) {
             reactionRepository.save(
                 Reaction(
-                    user = TODO(),
+                    user = user,
                     comment = comment,
                     reaction = reactionType
                 )
             )
         }else{
-            if(result.reaction == ReactionType.Like) result.reaction = ReactionType.DisLike
+            if(result.reaction == ReactionType.Like) reactionRepository.delete(result)
             else result.reaction = ReactionType.Like
         }
 
+    }
+
+    fun updateDisLike(comment: Comment, reactionType: ReactionType, userId: Long) {
+        val result = reactionRepository.findByCommentIdAndReaction(comment.id!!, reactionType)
+        val user = userRepository.findByIdOrNull(userId)?: throw ModelNotFoundException("User", userId)
+        if (result == null) {
+            reactionRepository.save(
+                Reaction(
+                    user = user,
+                    comment = comment,
+                    reaction = reactionType
+                )
+            )
+        }else{
+            if(result.reaction == ReactionType.DisLike) reactionRepository.delete(result)
+            else result.reaction = ReactionType.DisLike
+        }
     }
 }

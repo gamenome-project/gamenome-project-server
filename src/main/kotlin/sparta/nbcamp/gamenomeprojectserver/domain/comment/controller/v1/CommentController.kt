@@ -63,10 +63,10 @@ class CommentController(
     fun reportComment(
         @PathVariable reviewId: Long,
         @PathVariable commentId: Long,
-        @RequestBody reportReviewDto: ReportReviewDto,
+        @RequestBody reportCommentRequestDto: ReportCommentRequestDto,
     ):ResponseEntity<CommentReportResponseDto>{
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createReportComment(reviewId, commentId, reportReviewDto))
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createReportComment(reviewId, commentId, reportCommentRequestDto))
     }
 
     @PostMapping("/{commentId}/like")
@@ -76,7 +76,19 @@ class CommentController(
         @RequestParam token: String,
     ):ResponseEntity<Unit>{
 
-        commentService.commentLikeReaction(reviewId, commentId)
+        commentService.commentLikeReaction(reviewId, commentId, token)
+
+        return ResponseEntity.status(HttpStatus.OK).build()
+    }
+
+    @PostMapping("/{commentId}/dislike")
+    fun commentDisLikeReaction(
+        @PathVariable reviewId: Long,
+        @PathVariable commentId: Long,
+        @RequestParam token: String,
+    ):ResponseEntity<Unit>{
+
+        commentService.commentDisLikeReaction(reviewId, commentId, token)
 
         return ResponseEntity.status(HttpStatus.OK).build()
     }
