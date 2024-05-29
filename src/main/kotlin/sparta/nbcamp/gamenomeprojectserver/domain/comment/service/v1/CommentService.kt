@@ -1,6 +1,8 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1
 
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
@@ -41,10 +43,10 @@ class CommentService(
 
     }
 
-    fun getCommentList(reviewId: Long,): List<CommentResponseDto>{
+    fun getCommentPage(reviewId: Long, pageable: Pageable): Page<CommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
         commentRepository.findByReviewId(reviewId)?: throw ModelNotFoundException("comment", reviewId )
-        val result = commentRepository.findAllByReviewId(reviewId)
+        val result = commentRepository.findAllByReviewId(reviewId, pageable)
         return result.map{ CommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }

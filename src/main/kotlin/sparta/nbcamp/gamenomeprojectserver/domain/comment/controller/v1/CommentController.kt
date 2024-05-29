@@ -1,5 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.comment.controller.v1
 
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -34,12 +35,12 @@ class CommentController(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "createdAt") sort: CommentSort
-        ): ResponseEntity<List<CommentResponseDto>>{
+        ): ResponseEntity<Page<CommentResponseDto>>{
         val pageable: Pageable = PageRequest.of(0, 10, sort.setSortType())
 
        return ResponseEntity
            .status(HttpStatus.OK)
-           .body(commentService.getCommentList(reviewId))
+           .body(commentService.getCommentPage(reviewId, pageable))
     }
 
     @DeleteMapping("/{commentId}")
