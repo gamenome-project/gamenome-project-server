@@ -76,6 +76,6 @@ class UserServiceImpl(
     }
 
     override fun getUserIdFromToken(token: String): Long {
-        return jwtPlugin.validateToken(token).getOrNull()?.payload?.get("userId") as? Long ?: throw RuntimeException("User id is invalid")
+        return (jwtPlugin.validateToken(token).getOrNull()?.payload?.get("userId") as Int).toLong()
     }
 }
