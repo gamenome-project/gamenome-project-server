@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "app_user")
-class User(
+class User private constructor(
     @Column(name = "email", length = 255, unique = true, nullable = false)
     var email: String,
 
@@ -46,6 +46,8 @@ class User(
             aboutSummary = request.aboutSummary,
             profileImageUrl = request.profileImageUrl
         )
+
+        this.validate()
     }
 
     fun checkUpdatePermission(user: User): Boolean {
@@ -54,6 +56,16 @@ class User(
 
     fun signIn() {
         this.lastSignInAt = LocalDateTime.now()
+    }
+
+    private fun validate() {
+        require(email.isNotBlank()) { "Email cannot be blank" }
+        require(email.length < 50) { "Email must be less than 50 characters" }
+
+        // 암호화 고려하여 password의 불변성 검증은 보류
+
+        require(profile.nickname.isNotBlank()) { "Nickname cannot be blank" }
+        require(profile.nickname.length in 2..20) { "Nickname must be between 2 and 20 characters" }
     }
 
     companion object {
@@ -65,7 +77,7 @@ class User(
                     nickname = request.nickname,
                     aboutSummary = request.aboutSummary,
                 )
-            )
+            ).apply { this.validate() }
         }
     }
 }

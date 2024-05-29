@@ -34,9 +34,9 @@ class CommentController(
         @PathVariable reviewId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
-//        @RequestParam(defaultValue = "CreateAtAsc") sort: CommentSort
+        @RequestParam(defaultValue = "CreatedAtAsc") sort: CommentSort
         ): ResponseEntity<Page<CommentResponseDto>>{
-        val pageable: Pageable = PageRequest.of(page, size)
+        val pageable: Pageable = PageRequest.of(page, size, sort.setSortType())
 
        return ResponseEntity
            .status(HttpStatus.OK)
