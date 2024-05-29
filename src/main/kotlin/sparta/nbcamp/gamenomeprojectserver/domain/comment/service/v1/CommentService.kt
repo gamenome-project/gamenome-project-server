@@ -44,11 +44,11 @@ class CommentService(
 
     }
 
-    fun getCommentPage(reviewId: Long, pageable: Pageable): Page<CommentResponseDto>{
+    fun getCommentPage(reviewId: Long, pageable: Pageable): Page<GetCommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
         if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
         val result = commentRepository.findAllByReviewId(reviewId, pageable)
-        return result.map{ CommentResponseDto.from(it) }
+        return result.map{ GetCommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
 
