@@ -1,9 +1,13 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.comment.controller.v1
 
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.etc.CommentSort
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.etc.setSortType
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.dto.v1.ReportReviewDto
 
@@ -28,7 +32,11 @@ class CommentController(
     @GetMapping
     fun getCommentList(
         @PathVariable reviewId: Long,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "createdAt") sort: CommentSort
         ): ResponseEntity<List<CommentResponseDto>>{
+        val pageable: Pageable = PageRequest.of(0, 10, sort.setSortType())
 
        return ResponseEntity
            .status(HttpStatus.OK)
