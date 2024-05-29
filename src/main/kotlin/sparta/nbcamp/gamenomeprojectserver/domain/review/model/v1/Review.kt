@@ -10,13 +10,13 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "review")
 class Review(
-    @Column(name = "game_name", nullable = false)
+    @Column(name = "game_name", columnDefinition = "text", nullable = false)
     var gameName: String,
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", columnDefinition = "text", nullable = false)
     var title: String,
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", columnDefinition = "text", nullable = false)
     var description: String,
 
     @Column(name = "is_deleted", nullable = false)
