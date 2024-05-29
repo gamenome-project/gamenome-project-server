@@ -9,9 +9,9 @@ import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentR
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.dto.v1.ReportReviewDto
+import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
-import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtPlugin
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
