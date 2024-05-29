@@ -1,5 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1
 
+import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
@@ -7,9 +8,11 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
 
 interface UserService {
     fun signUp(request: SignUpDto): UserDto
-    fun signIn(request: SignInDto): UserDto
+    fun signIn(request: SignInDto): JwtResponseDto
     fun getUserProfile(userId: Long): UserDto
     fun getUserProfileList(userIds: List<Long>): List<UserDto>
     fun updateProfile(userId: Long, request: UserUpdateProfileDto): UserDto
     fun deactivateUser(userId: Long)
+    fun isValidToken(token: String): Boolean
+    fun getUserIdFromToken(token: String): Long
 }
