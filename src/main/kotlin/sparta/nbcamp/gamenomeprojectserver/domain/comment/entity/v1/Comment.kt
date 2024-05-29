@@ -2,12 +2,18 @@ package sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import org.hibernate.annotations.UpdateTimestamp
+import jakarta.persistence.Table
+import org.hibernate.annotations.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.CreateCommentRequestDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 
+@SQLDelete(sql = "UPDATE comment c SET c.deleted_at = current_timestamp AND c.is_deleted = true WHERE c.id = ?")
+@SQLRestriction("is_deleted = false")
 @Entity
 @Table(name = "comment")
 class Comment private constructor(

@@ -29,6 +29,7 @@ class CommentService(
 
     @Transactional
     fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
+
         val user = userService.getUserIdFromToken(token)
 
         val userResult = userRepository.findByIdOrNull(user)?: throw ModelNotFoundException("User", user)
@@ -40,6 +41,7 @@ class CommentService(
         commentRepository.save(result)
 
         return CommentResponseDto.from(result)
+
     }
 
     fun getCommentPage(reviewId: Long, pageable: Pageable): Page<CommentResponseDto>{
@@ -71,13 +73,8 @@ class CommentService(
         if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
         val result = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", reviewId)
 
-        result.isDeleted = true
-
-        commentRepository.save(result)
-
-        //TODO("deleteComment 이벤트 발생 시에 deletedAt이 업데이트 된 데이터가 특정 개수를 넘어가게 되면 delete 이벤트 발생")
-
-        TODO()
+        commentRepository.delete(result)
+        reactionService.delete(result)
     }
 
     fun createReportComment(
