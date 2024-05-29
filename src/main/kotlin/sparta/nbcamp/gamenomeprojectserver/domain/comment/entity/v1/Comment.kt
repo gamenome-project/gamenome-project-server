@@ -23,7 +23,7 @@ class Comment(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    val id: Long? = 0
 
     @Column(name = "is_deleted", nullable = false)
     var isDeleted: Boolean = false

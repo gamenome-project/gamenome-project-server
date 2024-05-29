@@ -5,6 +5,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
@@ -17,41 +19,47 @@ class CommentService(
     private val commentRepository: CommentRepository,
     private val reviewRepository: ReviewRepository,
     private val userService: UserService,
+    private val reactionService: ReactionService,
+    private val userRepository: UserRepository,
     private val reportService: ReportService,
-    private val userRepository: UserRepository
 ) {
 
     @Transactional
-    fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto): CommentResponseDto {
-        //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        val reviewResult = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("review", reviewId)
+    fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
 
-        val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, userService.TODO())
+        val user = userService.getUserIdFromToken(token)
+
+        val userResult = userRepository.findByIdOrNull(user)?: throw ModelNotFoundException("User", user)
+
+        val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+
+        val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, userResult)
+
+        commentRepository.save(result)
 
         return CommentResponseDto.from(result)
 
     }
 
-    fun getCommentList(reviewId: Long): List<CommentResponseDto> {
+    fun getCommentList(reviewId: Long,): List<CommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
-        commentRepository.findByReviewId(reviewId) ?: throw ModelNotFoundException("comment", reviewId)
-        val result = commentRepository.findAllByReviewIdNotDeletedAt(reviewId)
-        return result.map { CommentResponseDto.from(it) }
+        commentRepository.findByReviewId(reviewId)?: throw ModelNotFoundException("comment", reviewId )
+        val result = commentRepository.findAllByReviewId(reviewId)
+        return result.map{ CommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
 
     @Transactional
-    fun updateComment(
-        reviewId: Long, commentId: Long, updateCommentRequestDto: UpdateCommentRequestDto
+    fun updateComment(reviewId: Long, commentId: Long, updateCommentRequestDto: UpdateCommentRequestDto
     ): CommentResponseDto {
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", reviewId)
+        commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", reviewId )
 
         val result = commentRepository.findByIdAndReviewId(reviewId, commentId)
 
-        if (result.isDeleted) throw ModelNotFoundException("comment", reviewId)
+        if(result.isDeleted) throw ModelNotFoundException("comment", reviewId )
 
-        result.update(result.content)
+        result.update(updateCommentRequestDto.content)
 
         return CommentResponseDto.from(result)
     }
@@ -76,10 +84,7 @@ class CommentService(
         commentId: Long,
         reportCommentRequestDto: ReportCommentRequestDto
     ): CommentReportResponseDto {
-        //TODO("유저 로그인 검증")
-        //TODO("신고 내용 작성 후에 추가")
-        //TODO("신고 시에 put 이벤트 발생 으로 deletedAt 상태로 업데이트")
-        //TODO("CommentReportResponseDto 로 신고 정보 리턴")
+
         val comment = commentRepository.findByIdAndReviewId(reviewId, commentId)
         val user = userRepository.findByIdOrNull(reportCommentRequestDto.userId) ?: throw ModelNotFoundException(
             "User",
@@ -89,6 +94,25 @@ class CommentService(
         commentRepository.save(comment)
 
         return CommentReportResponseDto.from(report)
+    }
+
+    @Transactional
+    fun commentLikeReaction(reviewId: Long, commentId: Long, token: String) {
+        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+
+        val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
+        val userId = userService.getUserIdFromToken(token)
+
+        reactionService.update(commentResult, ReactionType.Like, userId)
+    }
+
+    fun commentDisLikeReaction(reviewId: Long, commentId: Long, token: String) {
+        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+
+        val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
+        val userId = userService.getUserIdFromToken(token)
+
+        reactionService.update(commentResult, ReactionType.DisLike, userId)
     }
 
 }
