@@ -29,8 +29,10 @@ class ReactionService(
             )
         }else if(reactionType == result.reaction) reactionRepository.delete(result)
         else result.reaction = reactionType
+    }
 
-
+    fun delete(comment: Comment,){
+        reactionRepository.deleteAllById(mutableListOf(comment.id))
     }
 
 }

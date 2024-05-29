@@ -69,10 +69,11 @@ class CommentService(
     @Transactional
     fun deleteComment(reviewId: Long, commentId: Long) {
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("review", reviewId)
+        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId)
         val result = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", reviewId)
 
         commentRepository.delete(result)
+        reactionService.delete(result)
     }
 
     fun createReportComment(
