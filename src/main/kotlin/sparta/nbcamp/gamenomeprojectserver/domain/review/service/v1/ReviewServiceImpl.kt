@@ -4,8 +4,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
-import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.Report
-import sparta.nbcamp.gamenomeprojectserver.domain.report.repository.v1.ReportRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
@@ -18,7 +17,7 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 @Service
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
-    private val reportRepository: ReportRepository,
+    private val reportService: ReportService,
     private val userRepository: UserRepository
 ) : ReviewService {
     @Transactional
@@ -55,13 +54,12 @@ class ReviewServiceImpl(
             "User",
             reviewReportDTO.userId
         )
-        val report = Report.fromDto(user, reviewId, EntityType.Review, reviewReportDTO)
-        reportRepository.save(report)
+        reportService.createReport(user, reviewId, EntityType.Review, reviewReportDTO)
         return ReviewDto.from(foundReview)
     }
 
     override fun getReviewReport(): List<ReviewDto> {
-        val reportedReviews = reportRepository.findByEntityType(EntityType.Review)
+        val reportedReviews = reportService.getReportsByEntityType(EntityType.Review)
         val reportedReviewIds = reportedReviews.map { it.entityId }.distinct()
         val foundReviews = reviewRepository.findAllById(reportedReviewIds)
         return foundReviews.map { ReviewDto.from(it) }
