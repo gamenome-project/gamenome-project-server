@@ -23,7 +23,7 @@ class CommentService(
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
         val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
 
-        val result = CreateCommentRequestDto.create(createCommentRequestDto, reviewResult, userService.TODO())
+        val result = Comment.fromDto(createCommentRequestDto, reviewResult, userService.TODO())
 
         return CommentResponseDto.from(result)
 
