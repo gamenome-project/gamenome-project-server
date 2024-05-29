@@ -10,7 +10,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "comment")
 class Comment(
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val user: User,
@@ -19,13 +18,8 @@ class Comment(
     @JoinColumn(name = "review_id")
     val review: Review,
 
-    @Column(name="content", nullable = false)
+    @Column(name="content", columnDefinition = "text", nullable = false)
     var content: String,
-
-
-
-
-
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,7 +2,7 @@ package sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import sparta.nbcamp.gamenomeprojectserver.domain.report.dto.v1.ReportReviewDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 
@@ -16,17 +16,17 @@ class Report(
     val user: User,
 
     @Column(name = "entity_id", nullable = false)
-    val entityId : Long,
+    val entityId: Long,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "entity_type", nullable = false)
     val entityType: EntityType,
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", columnDefinition = "text", nullable = false)
     val description: String,
 
 
-){
+    ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
@@ -35,4 +35,14 @@ class Report(
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 
+    companion object {
+        fun fromDto(user: User, reviewId: Long, entityType: EntityType, reviewReportDto: ReviewReportDto): Report {
+            return Report(
+                user = user,
+                entityId = reviewId,
+                entityType = entityType,
+                description = reviewReportDto.description
+            )
+        }
+    }
 }
