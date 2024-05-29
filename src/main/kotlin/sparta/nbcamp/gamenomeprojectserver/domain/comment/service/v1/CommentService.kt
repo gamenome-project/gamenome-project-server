@@ -45,7 +45,7 @@ class CommentService(
 
     fun getCommentPage(reviewId: Long, pageable: Pageable): Page<CommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
-        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("comment", reviewId )
+        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
         val result = commentRepository.findAllByReviewId(reviewId, pageable)
         return result.map{ CommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
@@ -69,7 +69,7 @@ class CommentService(
     @Transactional
     fun deleteComment(reviewId: Long, commentId: Long) {
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("review", reviewId)
+        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
         val result = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", reviewId)
 
         result.isDeleted = true
@@ -100,7 +100,7 @@ class CommentService(
 
     @Transactional
     fun commentLikeReaction(reviewId: Long, commentId: Long, token: String) {
-        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
 
         val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
         val userId = userService.getUserIdFromToken(token)
@@ -109,7 +109,7 @@ class CommentService(
     }
 
     fun commentDisLikeReaction(reviewId: Long, commentId: Long, token: String) {
-        reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
 
         val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
         val userId = userService.getUserIdFromToken(token)
