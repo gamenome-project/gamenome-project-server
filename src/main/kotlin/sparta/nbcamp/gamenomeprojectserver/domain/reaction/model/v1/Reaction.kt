@@ -1,7 +1,7 @@
-package sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1
+package sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1
 
 import jakarta.persistence.*
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 
 @Entity
@@ -20,7 +20,7 @@ class Reaction(
     @Column(name = "reaction", nullable = false)
     var reaction: ReactionType,
 
-) {
+    ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null

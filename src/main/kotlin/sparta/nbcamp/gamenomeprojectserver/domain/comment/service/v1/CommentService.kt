@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
-import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
-import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
+import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
@@ -44,11 +44,11 @@ class CommentService(
 
     }
 
-    fun getCommentPage(reviewId: Long, pageable: Pageable): Page<CommentResponseDto>{
+    fun getCommentPage(reviewId: Long, pageable: Pageable): Page<GetCommentResponseDto>{
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
         if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
         val result = commentRepository.findAllByReviewId(reviewId, pageable)
-        return result.map{ CommentResponseDto.from(it) }
+        return result.map{ GetCommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
 
