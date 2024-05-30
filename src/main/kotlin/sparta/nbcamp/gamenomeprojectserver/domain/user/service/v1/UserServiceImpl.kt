@@ -67,14 +67,15 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun deactivateUser(userId: Long) {
+    override fun deactivateUser(token: String) {
+        val userId = authService.getUserIdFromToken(token)
         val user = userRepository.find(userId) ?: throw ModelNotFoundException("User not found", userId)
 
         userRepository.delete(user)
     }
 
     override fun isNicknameDuplicate(nickname: String): Boolean {
-        return userRepository.findByProfileNickname(nickname) != null
+        return !userRepository.existsByNickname(nickname)
     }
 
     override fun sendMail(email: String): SendMailResponse {

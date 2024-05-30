@@ -7,6 +7,8 @@ data class UserUpdateProfileDto(
     override val email: String,
     override val password: String,
 
+    val confirmPassword: String,
+
     @field:NotBlank
     @field:Size(min = 2, max = 20, message = "Nickname must be between 2 and 20 characters")
     val nickname: String,
