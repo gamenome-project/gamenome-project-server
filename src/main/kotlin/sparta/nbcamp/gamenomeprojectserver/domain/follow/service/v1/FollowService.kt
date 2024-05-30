@@ -41,6 +41,7 @@ class FollowService(
 
         val result = followRepository.findAllByUserId(userId)
 
+
         return result.map { FollowingResponseDto.from(it) }
     }
 
