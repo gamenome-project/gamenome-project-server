@@ -1,4 +1,4 @@
-package sparta.nbcamp.gamenomeprojectserver.domain.security.jwt
+package sparta.nbcamp.gamenomeprojectserver.domain.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
