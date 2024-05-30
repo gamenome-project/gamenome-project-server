@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.ReportCommentRequestDto
 import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.Report
+import sparta.nbcamp.gamenomeprojectserver.domain.report.repository.v1.ReportJpaRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.report.repository.v1.ReportRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
