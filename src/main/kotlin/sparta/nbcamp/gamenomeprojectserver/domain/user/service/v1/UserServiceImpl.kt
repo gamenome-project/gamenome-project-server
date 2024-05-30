@@ -4,8 +4,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtPlugin
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
+import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
@@ -17,7 +17,7 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 @Service
 class UserServiceImpl(
     val userRepository: UserRepository,
-    val jwtPlugin: JwtPlugin,
+    val authService: AuthService,
     val passwordEncoder: PasswordEncoder
 ) : UserService {
 
@@ -39,7 +39,7 @@ class UserServiceImpl(
 
         if (!passwordEncoder.matches(request.password, user.password)) throw IllegalStateException("Password is incorrect")
 
-        val accessToken = jwtPlugin.generateAccessToken("userId", user.id ?: throw RuntimeException("User id is invalid"))
+        val accessToken = authService.generateToken(user.id!!)
 
         user.signIn()
 
