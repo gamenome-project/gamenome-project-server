@@ -17,6 +17,8 @@ class UserController(
 ) {
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
+        if (request.password != request.confirmPassword) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
     }
 
@@ -42,6 +44,8 @@ class UserController(
         @PathVariable("userId") userId: Long,
         @RequestBody request: UserUpdateProfileDto
     ): ResponseEntity<UserDto> {
+        if (request.password != request.confirmPassword) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(userId, request))
     }
 
