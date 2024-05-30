@@ -38,6 +38,8 @@ class User private constructor(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
+
+
     fun updateProfile(request: UserUpdateProfileDto) {
         this.email = request.email
         this.password = request.password
