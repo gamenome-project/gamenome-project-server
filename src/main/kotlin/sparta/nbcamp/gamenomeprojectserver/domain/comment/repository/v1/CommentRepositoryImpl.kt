@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 
 @Repository
 class CommentRepositoryImpl(

@@ -3,8 +3,8 @@ package sparta.nbcamp.gamenomeprojectserver.domain.reaction.repository.v1
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
-import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.Reaction
-import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionType
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.Reaction
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.ReactionType
 
 @Repository
 class ReactionRepositoryImpl(

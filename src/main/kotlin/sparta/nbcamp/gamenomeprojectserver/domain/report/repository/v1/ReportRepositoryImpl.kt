@@ -1,8 +1,8 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.report.repository.v1
 
 import org.springframework.stereotype.Repository
-import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
-import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.Report
+import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
+import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.Report
 
 @Repository
 class ReportRepositoryImpl(
