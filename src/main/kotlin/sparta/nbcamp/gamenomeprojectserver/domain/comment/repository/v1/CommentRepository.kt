@@ -11,4 +11,5 @@ interface CommentRepository {
     fun exists(commentId: Long): Boolean
     fun save(comment: Comment): Comment
     fun delete(comment: Comment)
+    fun deleteByIdAndReviewId(commentId: Long, reviewId: Long)
 }

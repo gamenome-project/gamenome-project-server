@@ -33,4 +33,8 @@ class CommentRepositoryImpl(
     override fun delete(comment: Comment) {
         commentJpaRepository.delete(comment)
     }
+
+    override fun deleteByIdAndReviewId(commentId: Long, reviewId: Long) {
+        commentJpaRepository.deleteByIdAndReviewId(commentId, reviewId)
+    }
 }

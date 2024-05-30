@@ -11,4 +11,5 @@ interface CommentJpaRepository: JpaRepository<Comment, Long> {
 
     fun findByIdAndReviewId(reviewId: Long, commentId: Long): Comment
 
+    fun deleteByIdAndReviewId(commentId: Long, reviewId: Long)
 }
