@@ -22,20 +22,23 @@ class CommentService(
     private val commentRepository: CommentRepository,
     private val reviewRepository: ReviewJpaRepository,
     private val userRepository: UserRepository,
-
     private val authService: AuthService,
     private val reactionService: ReactionService,
     private val reportService: ReportService,
 ) {
 
     @Transactional
-    fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
+    fun createComment(
+        reviewId: Long,
+        createCommentRequestDto: CreateCommentRequestDto,
+        token: String
+    ): CommentResponseDto {
 
         val user = authService.getUserIdFromToken(token)
 
-        val userResult = userRepository.find(user)?: throw ModelNotFoundException("User", user)
+        val userResult = userRepository.find(user) ?: throw ModelNotFoundException("User", user)
 
-        val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+        val reviewResult = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("review", reviewId)
 
         val result = Comment.fromDto(createCommentRequestDto, reviewResult, userResult)
 
@@ -45,21 +48,25 @@ class CommentService(
 
     }
 
-    fun getCommentPage(reviewId: Long, pageable: Pageable): Page<GetCommentResponseDto>{
+    fun getCommentPage(reviewId: Long, pageable: Pageable): Page<GetCommentResponseDto> {
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
-        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
+        if (!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId)
         val result = commentRepository.findAllByReviewId(reviewId, pageable)
-        return result.map{ GetCommentResponseDto.from(it) }
+        return result.map { GetCommentResponseDto.from(it) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
 
     @Transactional
-    fun updateComment(reviewId: Long, commentId: Long, updateCommentRequestDto: UpdateCommentRequestDto
+    fun updateComment(
+        reviewId: Long, commentId: Long, updateCommentRequestDto: UpdateCommentRequestDto
     ): CommentResponseDto {
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        val result = commentRepository.findByIdAndReviewId(reviewId, commentId) ?: throw ModelNotFoundException("comment", commentId)
+        val result = commentRepository.findByIdAndReviewId(reviewId, commentId) ?: throw ModelNotFoundException(
+            "comment",
+            commentId
+        )
 
-        if(result.isDeleted) throw RuntimeException("이미 삭제된 댓글입니다.")
+        if (result.isDeleted) throw RuntimeException("이미 삭제된 댓글입니다.")
 
         result.updateContent(updateCommentRequestDto.content)
 
@@ -69,7 +76,10 @@ class CommentService(
     @Transactional
     fun deleteComment(reviewId: Long, commentId: Long) {
         //TODO("유저 로그인 검증 및 블랙 리스트 검증")
-        val result = commentRepository.findByIdAndReviewId(reviewId, commentId) ?: throw ModelNotFoundException("comment", commentId)
+        val result = commentRepository.findByIdAndReviewId(reviewId, commentId) ?: throw ModelNotFoundException(
+            "comment",
+            commentId
+        )
 
         commentRepository.delete(result)
         reactionService.delete(result)
@@ -90,20 +100,30 @@ class CommentService(
     }
 
     fun commentLikeReaction(reviewId: Long, commentId: Long, token: String) {
-        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
+        if (!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId)
 
-        val commentResult = commentRepository.find(commentId)?: throw ModelNotFoundException("comment", commentId )
+        val commentResult = commentRepository.find(commentId) ?: throw ModelNotFoundException("comment", commentId)
         val userId = authService.getUserIdFromToken(token)
 
         reactionService.update(commentResult, ReactionType.Like, userId)
     }
 
     fun commentDisLikeReaction(reviewId: Long, commentId: Long, token: String) {
-        if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
+        if (!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId)
 
-        val commentResult = commentRepository.find(commentId)?: throw ModelNotFoundException("comment", commentId )
+        val commentResult = commentRepository.find(commentId) ?: throw ModelNotFoundException("comment", commentId)
         val userId = authService.getUserIdFromToken(token)
 
         reactionService.update(commentResult, ReactionType.DisLike, userId)
     }
+
+    @Transactional
+    fun deleteCommentsByReviewId(reviewId: Long) {
+        val comments = commentRepository.findAllByReviewId(reviewId)
+        comments.forEach { comment ->
+            commentRepository.delete(comment)
+            reactionService.delete(comment)
+        }
+    }
+
 }
