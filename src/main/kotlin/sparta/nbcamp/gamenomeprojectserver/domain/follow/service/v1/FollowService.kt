@@ -4,6 +4,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingRequestDto
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingResponseDto
+import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingUser
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.model.v1.Follow
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.repository.v1.FollowRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
@@ -36,7 +37,7 @@ class FollowService(
         }
     }
 
-    fun getFollowingUserList(token: String): List<FollowingResponseDto>? {
+    fun getFollowingUserList(token: String): List<FollowingResponseDto> {
 
         val userId = userService.getUserIdFromToken(token)
 
@@ -44,8 +45,7 @@ class FollowService(
 
         val allUser = userRepository.findAllById(result.map { it.followingUserId })
 
-
-        return result.map { FollowingResponseDto.from(it, allUser) }
+        return result.map { FollowingResponseDto.from(FollowingUser.from(it, allUser)) }
     }
 
 }

@@ -1,19 +1,12 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1
 
-import sparta.nbcamp.gamenomeprojectserver.domain.follow.model.v1.Follow
-import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
-
 data class FollowingResponseDto(
-    var followingUserId: Long,
-    val followingUserEmail: String,
-    val followingUserNickName : String
+    val followingUser: FollowingUser
 ){
-    companion object{
-        fun from(follow: Follow, user: List<User>): FollowingResponseDto{
+    companion object {
+        fun from(followingUser: FollowingUser): FollowingResponseDto{
             return FollowingResponseDto(
-                followingUserId = follow.followingUserId,
-                followingUserEmail = user.filter { it.id == follow.followingUserId }.map { it.email }.toString().trim('[',']'),
-                followingUserNickName = user.filter { it.id == follow.followingUserId }.map { it.profile.nickname }.toString().trim('[',']')
+                followingUser = followingUser
             )
         }
     }

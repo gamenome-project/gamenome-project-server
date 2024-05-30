@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingRequestDto
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingResponseDto
+import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingUser
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.service.v1.FollowService
 
 @RestController
