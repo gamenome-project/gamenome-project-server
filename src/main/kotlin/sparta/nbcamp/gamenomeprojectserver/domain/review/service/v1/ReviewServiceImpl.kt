@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
+import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto

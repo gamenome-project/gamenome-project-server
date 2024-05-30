@@ -2,7 +2,7 @@ package sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 
 interface CommentRepository {
     fun findAllByReviewId(reviewId: Long, pageable: Pageable = Pageable.unpaged()): Page<Comment>

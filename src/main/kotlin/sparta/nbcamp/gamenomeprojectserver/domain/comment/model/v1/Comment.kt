@@ -1,4 +1,4 @@
-package sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1
+package sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
