@@ -1,10 +1,7 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1
 
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
+import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.*
 
 interface UserService {
     fun signUp(request: SignUpDto): UserDto
@@ -16,4 +13,5 @@ interface UserService {
     fun isValidToken(token: String): Boolean
     fun getUserIdFromToken(token: String): Long
     fun isNicknameDuplicate(nickname: String): Boolean
+    fun sendMail(email : String): SendMailResponse
 }

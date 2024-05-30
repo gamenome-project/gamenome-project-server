@@ -4,17 +4,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
+import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.*
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 
 @RequestMapping("api/v1")
 @RestController
 class UserController(
     val userService: UserService
-){
+) {
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
@@ -59,5 +56,14 @@ class UserController(
     @GetMapping("/users/checkNickname")
     fun checkNicknameDuplicate(@RequestParam nickname: String): ResponseEntity<Boolean> {
         return ResponseEntity.status(HttpStatus.OK).body(userService.isNicknameDuplicate(nickname))
+    }
+
+    @PostMapping("/users/email")
+    fun sendMail(
+        @RequestParam email: String
+    ): ResponseEntity<SendMailResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.sendMail(email))
     }
 }
