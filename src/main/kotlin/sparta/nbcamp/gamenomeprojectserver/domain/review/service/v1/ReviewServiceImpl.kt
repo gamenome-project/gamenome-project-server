@@ -2,7 +2,6 @@ package sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
@@ -31,31 +30,32 @@ class ReviewServiceImpl(
     }
 
     override fun getReviewPage(pageable: Pageable): Page<ReviewDto> {
-        val foundAllReview = reviewRepository.findAllBy(pageable)
+        val foundAllReview = reviewRepository.findAll(pageable)
         return foundAllReview.map { ReviewDto.from(it) }
     }
 
     @Transactional
     override fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto): ReviewDto {
-        val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
+        val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         foundReview.updateReviewField(reviewUpdateDTO)
         return ReviewDto.from(foundReview)
     }
 
+    @Transactional
     override fun deleteReview(reviewId: Long) {
         reviewRepository.deleteById(reviewId)
         commentService.deleteCommentsByReviewId(reviewId)
     }
 
     override fun getReview(reviewId: Long): ReviewDto {
-        val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
+        val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         return ReviewDto.from(foundReview)
     }
 
     @Transactional
     override fun reportReview(reviewId: Long, reviewReportDTO: ReviewReportDto): ReviewDto {
-        val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
-        val user = userRepository.findByIdOrNull(reviewReportDTO.userId) ?: throw ModelNotFoundException(
+        val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
+        val user = userRepository.find(reviewReportDTO.userId) ?: throw ModelNotFoundException(
             "User",
             reviewReportDTO.userId
         )

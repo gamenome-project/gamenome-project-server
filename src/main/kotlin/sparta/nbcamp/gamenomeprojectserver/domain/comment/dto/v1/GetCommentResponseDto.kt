@@ -17,12 +17,9 @@ data class GetCommentResponseDto(
 
     val updatedAt: LocalDateTime,
 
-    val likes: Int,
-
-    val disLikes: Int,
 ){
     companion object {
-        fun from(comment: Comment, likes: Int, disLikes: Int): GetCommentResponseDto {
+        fun from(comment: Comment): GetCommentResponseDto {
             return GetCommentResponseDto(
                 id = comment.id!!,
                 userId = comment.user.id!!,
@@ -30,10 +27,8 @@ data class GetCommentResponseDto(
                 content = comment.content,
                 createdAt = comment.createdAt,
                 updatedAt = comment.updatedAt?:comment.createdAt,
-                likes = likes,
-                disLikes = disLikes,
-            )
 
+            )
         }
     }
 }

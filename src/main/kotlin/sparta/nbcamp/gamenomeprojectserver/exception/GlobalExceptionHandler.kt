@@ -18,4 +18,9 @@ class GlobalExceptionHandler {
     fun descriptionNotFoundException(e: DescriptionNotFoundException): ResponseEntity<ErrorDto>{
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorDto(e.message, "404"))
     }
+
+    @ExceptionHandler(DuplicatedException::class)
+    fun duplicatedException(e: DuplicatedException): ResponseEntity<ErrorDto>{
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorDto(e.message, "400"))
+    }
 }
