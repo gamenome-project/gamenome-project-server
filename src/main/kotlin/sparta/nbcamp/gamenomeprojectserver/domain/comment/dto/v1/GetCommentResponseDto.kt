@@ -16,6 +16,7 @@ data class GetCommentResponseDto(
     val createdAt: LocalDateTime,
 
     val updatedAt: LocalDateTime,
+
 ){
     companion object {
         fun from(comment: Comment): GetCommentResponseDto {
@@ -26,6 +27,7 @@ data class GetCommentResponseDto(
                 content = comment.content,
                 createdAt = comment.createdAt,
                 updatedAt = comment.updatedAt?:comment.createdAt,
+
             )
         }
     }
