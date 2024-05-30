@@ -14,7 +14,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 class UserController(
     val userService: UserService,
     val authService: AuthService
-){
+) {
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
@@ -27,7 +27,7 @@ class UserController(
 
     @PostMapping("/signout")
     fun signOut(): ResponseEntity<Unit> {
-        // TODO: signOut Logic (세션은 Service 안가고 Controller에서 바로 끊었는데 JWT는 아직 불확실함)
+        // TODO: 로그아웃 로직에 대해서는 이슈 #82 참고
 
         return ResponseEntity.status(HttpStatus.OK).build()
     }
@@ -46,16 +46,18 @@ class UserController(
     }
 
     @DeleteMapping("/users/deactivate")
-    fun deactivateUser(): ResponseEntity<Unit> {
-        TODO()
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
+    fun deactivateUser(request: HttpServletRequest): ResponseEntity<Unit> {
+        val authorization =
+            request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(authorization))
     }
 
     @GetMapping("/token/checkUserId")
     fun checkUserId(
         request: HttpServletRequest
     ): ResponseEntity<Long> {
-        val authorization = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val authorization =
+            request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         return ResponseEntity.status(HttpStatus.OK).body(authService.getUserIdFromToken(authorization))
     }
 

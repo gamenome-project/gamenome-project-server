@@ -67,7 +67,8 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun deactivateUser(userId: Long) {
+    override fun deactivateUser(token: String) {
+        val userId = authService.getUserIdFromToken(token)
         val user = userRepository.find(userId) ?: throw ModelNotFoundException("User not found", userId)
 
         userRepository.delete(user)
