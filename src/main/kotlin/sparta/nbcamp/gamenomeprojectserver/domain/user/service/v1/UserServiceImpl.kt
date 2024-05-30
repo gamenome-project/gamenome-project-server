@@ -7,6 +7,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import sparta.nbcamp.gamenomeprojectserver.domain.common.utils.RedisUtils
 import sparta.nbcamp.gamenomeprojectserver.domain.common.utils.Secret
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtPlugin
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
@@ -21,6 +22,7 @@ class UserServiceImpl(
     val userRepository: UserRepository,
     val jwtPlugin: JwtPlugin,
     val javaMailSender: JavaMailSender,
+    val redisUtils: RedisUtils,
 ) : UserService {
 
     @Transactional
@@ -89,10 +91,23 @@ class UserServiceImpl(
     }
 
     override fun sendMail(email: String): SendMailResponse {
-        val code = UUID.randomUUID().toString().substring(0, 6);
+        val code = UUID.randomUUID().toString().substring(0, 6)
         val mimeMessage = createMessage(code, email)
         javaMailSender.send(mimeMessage)
+        redisUtils.setDataExpire(email, code)
         return SendMailResponse(message = "메일 발송 완료")
+    }
+
+    override fun checkCertification(email: String, code: String): SendMailResponse {
+        val storedCode = redisUtils.getData(email)?.trim() ?: "null code"
+        val trimmedCode = code.trim()
+
+        if (trimmedCode == storedCode) {
+            redisUtils.deleteData(email)
+            return SendMailResponse(message = "이메일 인증 성공")
+        } else {
+            return SendMailResponse(message = "인증번호가 잘못되었거나 인증 시간이 초과되었습니다. 다시 확인해주세요.")
+        }
     }
 
     private fun createMessage(code: String, email: String): MimeMessage {
@@ -103,5 +118,4 @@ class UserServiceImpl(
         message.setFrom(InternetAddress(Secret.RECIPIENT))
         return message
     }
-
 }

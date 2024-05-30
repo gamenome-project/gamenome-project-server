@@ -66,4 +66,14 @@ class UserController(
             .status(HttpStatus.OK)
             .body(userService.sendMail(email))
     }
+
+    @PostMapping("/users/email/check")
+    fun checkCertification(
+        @RequestParam email: String,
+        @RequestParam code: String
+    ): ResponseEntity<SendMailResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.checkCertification(email, code))
+    }
 }

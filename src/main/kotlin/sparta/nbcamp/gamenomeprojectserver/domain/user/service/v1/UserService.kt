@@ -14,4 +14,5 @@ interface UserService {
     fun getUserIdFromToken(token: String): Long
     fun isNicknameDuplicate(nickname: String): Boolean
     fun sendMail(email : String): SendMailResponse
+    fun checkCertification(email: String, code: String): SendMailResponse
 }
