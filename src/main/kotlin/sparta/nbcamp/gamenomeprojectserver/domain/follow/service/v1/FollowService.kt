@@ -11,6 +11,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 import sparta.nbcamp.gamenomeprojectserver.exception.DuplicatedException
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
+
 @Service
 class FollowService(
     val followRepository: FollowRepository,
@@ -41,8 +42,10 @@ class FollowService(
 
         val result = followRepository.findAllByUserId(userId)
 
+        val allUser = userRepository.findAllById(result.map { it.followingUserId })
 
-        return result.map { FollowingResponseDto.from(it) }
+
+        return result.map { FollowingResponseDto.from(it, allUser) }
     }
 
 }
