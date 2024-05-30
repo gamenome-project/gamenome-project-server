@@ -74,7 +74,7 @@ class UserServiceImpl(
     }
 
     override fun isNicknameDuplicate(nickname: String): Boolean {
-        return userRepository.findByProfileNickname(nickname) != null
+        return !userRepository.existsByNickname(nickname)
     }
 
     override fun sendMail(email: String): SendMailResponse {
