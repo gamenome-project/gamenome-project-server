@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
+import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
@@ -14,7 +15,8 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 @RequestMapping("api/v1")
 @RestController
 class UserController(
-    val userService: UserService
+    val userService: UserService,
+    val authService: AuthService
 ){
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
@@ -57,6 +59,6 @@ class UserController(
         request: HttpServletRequest
     ): ResponseEntity<Long> {
         val authorization = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserIdFromToken(authorization))
+        return ResponseEntity.status(HttpStatus.OK).body(authService.getUserIdFromToken(authorization))
     }
 }
