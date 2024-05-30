@@ -1,6 +1,5 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1
 
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -47,20 +46,15 @@ class UserServiceImpl(
     }
 
     override fun getUserProfile(userId: Long): UserDto {
-        val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException("User not found", userId)
+        val user = userRepository.find(userId) ?: throw ModelNotFoundException("User not found", userId)
 
         return UserDto.fromEntity(user)
     }
 
-    override fun getUserProfileList(userIds: List<Long>): List<UserDto> {
-        return userRepository.findAllById(userIds).map { UserDto.fromEntity(it) }
-    }
-
     @Transactional
     override fun updateProfile(userId: Long, request: UserUpdateProfileDto): UserDto {
-        val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException("User not found", userId)
+        val user = userRepository.find(userId) ?: throw ModelNotFoundException("User not found", userId)
 
-//        if (!user.checkUpdatePermission())
         user.updateProfile(request)
 
         return UserDto.fromEntity(user)
@@ -68,7 +62,7 @@ class UserServiceImpl(
 
     @Transactional
     override fun deactivateUser(userId: Long) {
-        val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException("User not found", userId)
+        val user = userRepository.find(userId) ?: throw ModelNotFoundException("User not found", userId)
 
         userRepository.delete(user)
     }

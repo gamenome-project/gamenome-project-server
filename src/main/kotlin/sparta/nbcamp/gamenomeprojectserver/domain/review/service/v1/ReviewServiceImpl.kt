@@ -19,8 +19,9 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 @Service
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
+    private val userRepository: UserRepository,
+
     private val reportService: ReportService,
-    private val userRepository: UserRepository
 ) : ReviewService {
     @Transactional
     override fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto {
@@ -52,7 +53,7 @@ class ReviewServiceImpl(
     @Transactional
     override fun reportReview(reviewId: Long, reviewReportDTO: ReviewReportDto): ReviewDto {
         val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
-        val user = userRepository.findByIdOrNull(reviewReportDTO.userId) ?: throw ModelNotFoundException(
+        val user = userRepository.find(reviewReportDTO.userId) ?: throw ModelNotFoundException(
             "User",
             reviewReportDTO.userId
         )

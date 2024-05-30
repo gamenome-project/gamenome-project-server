@@ -10,7 +10,6 @@ interface UserService {
     fun signUp(request: SignUpDto): UserDto
     fun signIn(request: SignInDto): JwtResponseDto
     fun getUserProfile(userId: Long): UserDto
-    fun getUserProfileList(userIds: List<Long>): List<UserDto>
     fun updateProfile(userId: Long, request: UserUpdateProfileDto): UserDto
     fun deactivateUser(userId: Long)
 }

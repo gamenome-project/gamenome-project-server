@@ -14,16 +14,17 @@ import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
-import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserJpaRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
 class CommentService(
     private val commentRepository: CommentRepository,
     private val reviewRepository: ReviewRepository,
+    private val userRepository: UserRepository,
+
     private val authService: AuthService,
     private val reactionService: ReactionService,
-    private val userRepository: UserRepository,
     private val reportService: ReportService,
 ) {
 
@@ -32,7 +33,7 @@ class CommentService(
 
         val user = authService.getUserIdFromToken(token)
 
-        val userResult = userRepository.findByIdOrNull(user)?: throw ModelNotFoundException("User", user)
+        val userResult = userRepository.find(user)?: throw ModelNotFoundException("User", user)
 
         val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
 
@@ -84,7 +85,7 @@ class CommentService(
     ): CommentReportResponseDto {
 
         val comment = commentRepository.findByIdAndReviewId(reviewId, commentId)
-        val user = userRepository.findByIdOrNull(reportCommentRequestDto.userId) ?: throw ModelNotFoundException(
+        val user = userRepository.find(reportCommentRequestDto.userId) ?: throw ModelNotFoundException(
             "User",
             reportCommentRequestDto.userId
         )
@@ -99,7 +100,7 @@ class CommentService(
         if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
 
         val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
-        val userId = userService.getUserIdFromToken(token)
+        val userId = authService.getUserIdFromToken(token)
 
         reactionService.update(commentResult, ReactionType.Like, userId)
     }
@@ -108,7 +109,7 @@ class CommentService(
         if(!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId )
 
         val commentResult = commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", commentId )
-        val userId = userService.getUserIdFromToken(token)
+        val userId = authService.getUserIdFromToken(token)
 
         reactionService.update(commentResult, ReactionType.DisLike, userId)
     }
