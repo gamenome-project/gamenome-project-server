@@ -12,7 +12,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.reaction.entity.v1.ReactionTyp
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
-import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewJpaRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
@@ -20,7 +20,7 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 @Service
 class CommentService(
     private val commentRepository: CommentRepository,
-    private val reviewRepository: ReviewRepository,
+    private val reviewRepository: ReviewJpaRepository,
     private val userRepository: UserRepository,
 
     private val authService: AuthService,

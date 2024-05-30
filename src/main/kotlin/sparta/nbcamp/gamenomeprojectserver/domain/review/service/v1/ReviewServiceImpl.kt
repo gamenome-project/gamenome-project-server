@@ -30,29 +30,30 @@ class ReviewServiceImpl(
     }
 
     override fun getReviewPage(pageable: Pageable): Page<ReviewDto> {
-        val foundAllReview = reviewRepository.findAllBy(pageable)
+        val foundAllReview = reviewRepository.findAll(pageable)
         return foundAllReview.map { ReviewDto.from(it) }
     }
 
     @Transactional
     override fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto): ReviewDto {
-        val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
+        val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         foundReview.updateReviewField(reviewUpdateDTO)
         return ReviewDto.from(foundReview)
     }
 
+    @Transactional
     override fun deleteReview(reviewId: Long) {
         reviewRepository.deleteById(reviewId)
     }
 
     override fun getReview(reviewId: Long): ReviewDto {
-        val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
+        val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         return ReviewDto.from(foundReview)
     }
 
     @Transactional
     override fun reportReview(reviewId: Long, reviewReportDTO: ReviewReportDto): ReviewDto {
-        val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
+        val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         val user = userRepository.find(reviewReportDTO.userId) ?: throw ModelNotFoundException(
             "User",
             reviewReportDTO.userId
