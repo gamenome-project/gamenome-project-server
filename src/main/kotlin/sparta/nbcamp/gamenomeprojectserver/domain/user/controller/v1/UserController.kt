@@ -1,5 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.controller.v1
 
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -49,8 +50,11 @@ class UserController(
     }
 
     @GetMapping("/token/checkUserId")
-    fun checkUserId(@RequestParam token: String): ResponseEntity<Long> {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserIdFromToken(token))
+    fun checkUserId(
+        request: HttpServletRequest
+    ): ResponseEntity<Long> {
+        val authorization = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserIdFromToken(authorization))
     }
 
     @GetMapping("/users/checkNickname")

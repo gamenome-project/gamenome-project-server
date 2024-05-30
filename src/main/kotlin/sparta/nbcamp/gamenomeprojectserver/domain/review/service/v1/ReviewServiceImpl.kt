@@ -1,9 +1,11 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
+import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
@@ -26,8 +28,8 @@ class ReviewServiceImpl(
         return ReviewDto.from(reviewRepository.save(review))
     }
 
-    override fun getReviewList(): List<ReviewDto> {
-        val foundAllReview = reviewRepository.findAll()
+    override fun getReviewPage(pageable: Pageable): Page<ReviewDto> {
+        val foundAllReview = reviewRepository.findAllBy(pageable)
         return foundAllReview.map { ReviewDto.from(it) }
     }
 

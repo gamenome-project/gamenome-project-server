@@ -1,6 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1
 
-import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.Report
+import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.Report
 
 data class CommentReportResponseDto (
     val userId: Long,

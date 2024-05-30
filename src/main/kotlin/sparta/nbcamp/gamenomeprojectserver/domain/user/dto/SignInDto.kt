@@ -1,6 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.dto
 
 data class SignInDto(
-    val email: String,
-    val password: String
-)
+    override val email: String,
+    override val password: String
+) : EmailPasswordValidatableDto(email, password)
