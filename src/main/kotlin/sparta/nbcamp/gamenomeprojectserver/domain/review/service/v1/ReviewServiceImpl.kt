@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
@@ -20,7 +21,8 @@ import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
     private val reportService: ReportService,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val commentService: CommentService
 ) : ReviewService {
     @Transactional
     override fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto {
@@ -42,6 +44,7 @@ class ReviewServiceImpl(
 
     override fun deleteReview(reviewId: Long) {
         reviewRepository.deleteById(reviewId)
+        commentService.deleteCommentsByReviewId(reviewId)
     }
 
     override fun getReview(reviewId: Long): ReviewDto {

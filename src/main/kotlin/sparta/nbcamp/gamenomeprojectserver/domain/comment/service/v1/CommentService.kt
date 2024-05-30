@@ -113,4 +113,13 @@ class CommentService(
         reactionService.update(commentResult, ReactionType.DisLike, userId)
     }
 
+    @Transactional
+    fun deleteCommentsByReviewId(reviewId: Long) {
+        val comments = commentRepository.findAllByReviewId(reviewId)
+        comments.forEach { comment ->
+            commentRepository.delete(comment)
+            reactionService.delete(comment)
+        }
+    }
+
 }
