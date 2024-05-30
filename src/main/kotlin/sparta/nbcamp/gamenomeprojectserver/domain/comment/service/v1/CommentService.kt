@@ -13,15 +13,15 @@ import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionSe
 import sparta.nbcamp.gamenomeprojectserver.domain.report.entity.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
-import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
-import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
+import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
+import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserJpaRepository
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
 class CommentService(
     private val commentRepository: CommentRepository,
     private val reviewRepository: ReviewRepository,
-    private val userService: UserService,
+    private val authService: AuthService,
     private val reactionService: ReactionService,
     private val userRepository: UserRepository,
     private val reportService: ReportService,
@@ -30,7 +30,7 @@ class CommentService(
     @Transactional
     fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
 
-        val user = userService.getUserIdFromToken(token)
+        val user = authService.getUserIdFromToken(token)
 
         val userResult = userRepository.findByIdOrNull(user)?: throw ModelNotFoundException("User", user)
 

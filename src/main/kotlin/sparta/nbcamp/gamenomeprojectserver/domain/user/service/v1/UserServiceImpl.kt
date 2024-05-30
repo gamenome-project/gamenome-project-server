@@ -72,12 +72,4 @@ class UserServiceImpl(
 
         userRepository.delete(user)
     }
-
-    override fun isValidToken(token: String): Boolean {
-        return jwtPlugin.validateToken(token).isSuccess
-    }
-
-    override fun getUserIdFromToken(token: String): Long {
-        return (jwtPlugin.validateToken(token).getOrNull()?.payload?.get("userId") as Int).toLong()
-    }
 }

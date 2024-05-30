@@ -13,6 +13,4 @@ interface UserService {
     fun getUserProfileList(userIds: List<Long>): List<UserDto>
     fun updateProfile(userId: Long, request: UserUpdateProfileDto): UserDto
     fun deactivateUser(userId: Long)
-    fun isValidToken(token: String): Boolean
-    fun getUserIdFromToken(token: String): Long
 }
