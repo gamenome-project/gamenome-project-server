@@ -35,7 +35,7 @@ class CommentController(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "CreatedAtAsc") sort: CommentSort
-        ): ResponseEntity<Page<CommentResponseDto>>{
+        ): ResponseEntity<Page<GetCommentResponseDto>>{
         val pageable: Pageable = PageRequest.of(page, size, sort.setSortType())
 
        return ResponseEntity

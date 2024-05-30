@@ -1,6 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1
 
-import sparta.nbcamp.gamenomeprojectserver.domain.comment.entity.v1.Comment
+import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 import java.time.LocalDateTime
 
 data class CommentResponseDto(
