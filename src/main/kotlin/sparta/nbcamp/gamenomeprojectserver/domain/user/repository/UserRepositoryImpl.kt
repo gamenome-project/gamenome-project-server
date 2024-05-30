@@ -8,6 +8,13 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 class UserRepositoryImpl(
     private val userJpaRepository: UserJpaRepository
 ) : UserRepository {
+    override fun findAllById(ids: List<Long>): List<User> {
+        return userJpaRepository.findAllById(ids)
+    }
+
+    override fun findByProfileNickname(nickname: String): User? {
+        return userJpaRepository.findByProfileNickname(nickname)
+    }
 
     override fun findByEmail(email: String): User? {
         return userJpaRepository.findByEmail(email)

@@ -3,14 +3,12 @@ package sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1
 import jakarta.mail.Message
 import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeMessage
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sparta.nbcamp.gamenomeprojectserver.domain.common.utils.RedisUtils
 import sparta.nbcamp.gamenomeprojectserver.domain.common.utils.Secret
-import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtPlugin
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.*
