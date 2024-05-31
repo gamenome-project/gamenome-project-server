@@ -13,7 +13,6 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 @Service
 class StarScoreService(
     private val starScoreRepository: StarScoreRepository,
-    @PersistenceContext private val em: EntityManager
 ) {
 
     @Transactional

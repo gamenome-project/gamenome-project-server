@@ -14,7 +14,7 @@ class CommentRepositoryImpl(
         return commentJpaRepository.findAllByReviewId(reviewId, pageable)
     }
 
-    override fun findByIdAndReviewId(commentId: Long, reviewId: Long): Comment {
+    override fun findByIdAndReviewId(commentId: Long, reviewId: Long): Comment? {
         return commentJpaRepository.findByIdAndReviewId(reviewId, commentId)
     }
 

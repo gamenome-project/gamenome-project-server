@@ -15,6 +15,6 @@ fun setStarScore(star: Float): Float{
         in(4.0f..< 4.5f) -> 4.0f
         in(4.5f..< 5.0f) -> 4.5f
         5.0f -> 5.0f
-        else -> throw ModelNotFoundException("Score", 404)
+        else -> throw IllegalStateException("Score 값은 0부터 5 사이의 값 이어야 합니다")
     }
 }

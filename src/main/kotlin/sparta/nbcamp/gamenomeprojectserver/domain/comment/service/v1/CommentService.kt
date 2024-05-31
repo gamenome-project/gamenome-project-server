@@ -43,7 +43,9 @@ class CommentService(
         val result = Comment.fromDto(createCommentRequestDto, reviewResult, userResult)
 
         starScoreService.giveCommentScore(reviewResult, userResult, result, score)
+
         commentRepository.save(result)
+
 
         return CommentResponseDto.from(result, score)
 
