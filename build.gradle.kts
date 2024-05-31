@@ -36,6 +36,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.12.5")
     implementation ("org.springframework.boot:spring-boot-starter-data-redis")
     implementation ("org.springframework.boot:spring-boot-starter-mail")
+    implementation("io.awspring.cloud:spring-cloud-starter-aws:2.3.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

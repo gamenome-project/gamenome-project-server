@@ -2,6 +2,7 @@ package sparta.nbcamp.gamenomeprojectserver.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import sparta.nbcamp.gamenomeprojectserver.exception.dto.ErrorDto
@@ -21,6 +22,11 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicatedException::class)
     fun duplicatedException(e: DuplicatedException): ResponseEntity<ErrorDto>{
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorDto(e.message, "400"))
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun fileValidatedException(e: FileValidateException): ResponseEntity<ErrorDto> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorDto(e.message, "400"))
     }
 }

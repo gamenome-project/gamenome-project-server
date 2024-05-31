@@ -38,13 +38,13 @@ class User private constructor(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    fun updateProfile(request: UserUpdateProfileDto) {
+    fun updateProfile(request: UserUpdateProfileDto, imageUrl: String?) {
         this.email = request.email
         this.password = request.password
         this.profile = Profile(
             nickname = request.nickname,
             aboutSummary = request.aboutSummary,
-            profileImageUrl = request.profileImageUrl
+            profileImageUrl = imageUrl
         )
 
         this.validate()
