@@ -34,7 +34,7 @@ class ReactionService(
         reactionRepository.deleteAllByCommentId(comment.id!!)
     }
 
-    fun get(idList: List<Long>): List<ReactionResponseDto>{
+    fun getCount(idList: List<Long>): List<ReactionResponseDto>{
         val list = mutableListOf<ReactionResponseDto>()
         idList.forEach { id ->
             val like = reactionRepository.countByCommentIdAndReaction(id, ReactionType.Like)

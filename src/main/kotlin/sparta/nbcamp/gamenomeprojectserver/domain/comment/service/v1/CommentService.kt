@@ -9,7 +9,6 @@ import sparta.nbcamp.gamenomeprojectserver.common.setStarScore
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
-import sparta.nbcamp.gamenomeprojectserver.domain.reaction.dto.v1.ReactionResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
@@ -58,7 +57,7 @@ class CommentService(
         val result = commentRepository.findAllByReviewId(reviewId, pageable)
         val idList = result.map { it.id!! }.toMutableList()
 
-        val reaction = reactionService.get(idList)
+        val reaction = reactionService.getCount(idList)
 
         val commentToReactionMap = idList.zip(reaction).toMap()
 
