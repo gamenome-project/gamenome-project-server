@@ -18,4 +18,6 @@ interface ReviewService {
     fun reportReview(reviewId: Long, reviewReportDTO: ReviewReportDto): ReviewDto
 
     fun getReviewReport(): List<ReviewDto>
+
+    fun getFollowingReviewPage(token: String, pageable: Pageable): Page<ReviewDto>
 }
