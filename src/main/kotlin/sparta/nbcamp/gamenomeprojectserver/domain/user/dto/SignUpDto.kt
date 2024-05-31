@@ -16,4 +16,6 @@ data class SignUpDto (
     @field:NotBlank
     @field:Size(max = 50, message = "About summary must be 50 characters or less")
     val aboutSummary: String?,
+
+    val profileImageUrl: String?
 ) : EmailPasswordValidatableDto(email, password)

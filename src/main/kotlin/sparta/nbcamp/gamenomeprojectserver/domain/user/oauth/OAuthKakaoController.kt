@@ -1,21 +1,20 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.oauth
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
+import org.springframework.http.*
 import org.springframework.stereotype.Controller
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestTemplate
+import sparta.nbcamp.gamenomeprojectserver.domain.user.oauth.dto.OAuthKakaoCreateDto
+import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
+import java.security.SecureRandom
 
 
 @Controller
 class OAuthKakaoController(
+    private val userService: UserService,
     private val OAuthKakaoConfig: OAuthKakaoConfig
 ) {
     @GetMapping("/oauth2/kakao/login")
@@ -56,9 +55,12 @@ class OAuthKakaoController(
         return accessTokenResponse.toString()
     }
 
-    @GetMapping("/oauth2/kakao/user")
+    @PostMapping("/oauth2/kakao/user")
     @ResponseBody
-    fun getKakaoUser(@RequestParam accessToken: String): String {
+    fun getKakaoUser(
+        @RequestParam accessToken: String,
+        @RequestBody request: OAuthKakaoCreateDto
+    ): ResponseEntity<Any> {
         val header = HttpHeaders()
         header.contentType = MediaType.APPLICATION_FORM_URLENCODED
         header["Authorization"] = "Bearer $accessToken"
@@ -74,14 +76,32 @@ class OAuthKakaoController(
             String::class.java
         )
 
-        val responseBody: String = userResponse.body ?: ""
-        val objectMapper = ObjectMapper()
-        val jsonNode = objectMapper.readTree(responseBody)
+        val jsonNode = ObjectMapper().readTree(userResponse.body ?: "")
 
-        val id = jsonNode["id"].asLong()
         val profileImageUrl = jsonNode["kakao_account"]["profile"]["profile_image_url"].asText("")
         val nickname = jsonNode["kakao_account"]["profile"]["nickname"].asText("")
 
-        return "id: $id, profileImageUrl: $profileImageUrl, nickname: $nickname"
+        if (!userService.isNicknameDuplicate(nickname)) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.signIn(nickname, "Kakao"))
+        } else {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                .body(
+                    userService.signUp(
+                        request = request,
+                        password = generateRandomPassword(),
+                        nickname = nickname,
+                        profileImageUrl = profileImageUrl
+                    )
+                )
+        }
+    }
+
+    private fun generateRandomPassword(length: Int = 12): String {
+        val charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+"
+        val secureRandom = SecureRandom()
+        return (1..length)
+            .map { secureRandom.nextInt(charPool.length) }
+            .map(charPool::get)
+            .joinToString("")
     }
 }

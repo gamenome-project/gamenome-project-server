@@ -13,6 +13,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.*
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
+import sparta.nbcamp.gamenomeprojectserver.domain.user.oauth.dto.OAuthKakaoCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 import java.util.*
@@ -38,11 +39,52 @@ class UserServiceImpl(
     }
 
     @Transactional
+    override fun signUp(
+        request: OAuthKakaoCreateDto,
+        password: String,
+        nickname: String,
+        profileImageUrl: String
+    ): UserDto {
+        val signUpDto = SignUpDto(
+            email = request.email,
+            password = passwordEncoder.encode(password),
+            confirmPassword = "",
+            nickname = nickname,
+            profileImageUrl = profileImageUrl,
+            aboutSummary = "",
+        )
+
+        return UserDto.fromEntity(
+            userRepository.save(
+                User.fromDto(
+                    signUpDto, "Kakao"
+                )
+            )
+        )
+    }
+
+    @Transactional
     override fun signIn(request: SignInDto): JwtResponseDto {
         val user = userRepository.findByEmail(request.email)
             ?: throw IllegalStateException("User not found with email")
 
-        if (!passwordEncoder.matches(request.password, user.password)) throw IllegalStateException("Password is incorrect")
+        if (!passwordEncoder.matches(
+                request.password,
+                user.password
+            )
+        ) throw IllegalStateException("Password is incorrect")
+
+        val accessToken = authService.generateToken(user.id!!)
+
+        user.signIn()
+
+        return JwtResponseDto(accessToken)
+    }
+
+    @Transactional
+    override fun signIn(nickname: String, provider: String): JwtResponseDto {
+        val user = userRepository.findByNicknameAndProvider(nickname, provider)
+            ?: throw IllegalStateException("User not found with nickname and provider")
 
         val accessToken = authService.generateToken(user.id!!)
 
@@ -105,6 +147,6 @@ class UserServiceImpl(
         message.setText("이메일 인증코드: $code")
         message.setFrom(InternetAddress(Secret.RECIPIENT))
         return message
-        
+
     }
 }
