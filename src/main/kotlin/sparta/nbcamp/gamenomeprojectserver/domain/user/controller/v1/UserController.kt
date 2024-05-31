@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import sparta.nbcamp.gamenomeprojectserver.domain.s3.service.v1.S3Service
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.*
@@ -13,7 +15,8 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 @RestController
 class UserController(
     val userService: UserService,
-    val authService: AuthService
+    val authService: AuthService,
+    val s3Service: S3Service,
 ) {
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
@@ -42,11 +45,14 @@ class UserController(
     @PutMapping("/users/{userId}/profile")
     fun updateProfile(
         @PathVariable("userId") userId: Long,
-        @RequestBody request: UserUpdateProfileDto
+        @RequestPart request: UserUpdateProfileDto,
+        @RequestPart("profileImage", required = false) profileImage: MultipartFile?
     ): ResponseEntity<UserDto> {
         if (request.password != request.confirmPassword) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        val uploadImage = profileImage.let { s3Service.uploadImage(it!!) }
+        val uploadImageUrl = uploadImage.let { s3Service.getImageUrl(it) }
 
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(userId, request))
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(userId, request, uploadImageUrl))
     }
 
     @DeleteMapping("/users/deactivate")

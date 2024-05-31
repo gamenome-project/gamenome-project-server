@@ -7,7 +7,7 @@ interface UserService {
     fun signUp(request: SignUpDto): UserDto
     fun signIn(request: SignInDto): JwtResponseDto
     fun getUserProfile(userId: Long): UserDto
-    fun updateProfile(userId: Long, request: UserUpdateProfileDto): UserDto
+    fun updateProfile(userId: Long, request: UserUpdateProfileDto, imageUrl: String?): UserDto
     fun deactivateUser(token: String)
     fun isNicknameDuplicate(nickname: String): Boolean
     fun sendMail(email : String): SendMailResponse
