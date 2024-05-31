@@ -24,17 +24,28 @@
 
 ## 1-이벤트스토밍
 
-//사진 1
-
+![img.png](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/eventstoming.png
+)
 ## 2-와이어프레임
 
-//사진 1 ~ 4
+![와이어프레임1](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/wireframe1.png)
+
+![와이어프레임2](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/wireframe2.png)
+
+![와이어프레임3](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/wireframe3.png)
+
+![와이어프레임4](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/wireframe4.png)
+
+
 
 
 ## 3-API-명세서
 
-//사진1 ~ 3
+![Api명세서](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary1.png)
 
+![Api명세서](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary2.png)
+
+![Api명세서](https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary3.png)
 
 ## 4-ERD
 ```mermaid
