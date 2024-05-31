@@ -58,10 +58,10 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun updateProfile(userId: Long, request: UserUpdateProfileDto): UserDto {
+    override fun updateProfile(userId: Long, request: UserUpdateProfileDto, imageUrl: String?): UserDto {
         val user = userRepository.find(userId) ?: throw ModelNotFoundException("User not found", userId)
 
-        user.updateProfile(request)
+        user.updateProfile(request, imageUrl)
 
         return UserDto.fromEntity(user)
     }
