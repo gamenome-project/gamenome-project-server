@@ -30,7 +30,7 @@ class FollowController(
     @GetMapping
     fun getFollowingUserList(
         request : HttpServletRequest
-    ):ResponseEntity<List<FollowingResponseDto>>{
+    ):ResponseEntity<FollowingResponseDto>{
 
         val token = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 

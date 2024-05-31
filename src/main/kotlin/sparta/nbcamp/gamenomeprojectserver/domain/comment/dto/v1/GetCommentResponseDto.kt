@@ -29,7 +29,6 @@ data class GetCommentResponseDto(
                 updatedAt = comment.updatedAt?:comment.createdAt,
 
             )
-
         }
     }
 }

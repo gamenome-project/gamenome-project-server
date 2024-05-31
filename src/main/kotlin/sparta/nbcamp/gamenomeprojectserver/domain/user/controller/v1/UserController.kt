@@ -5,19 +5,20 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import sparta.nbcamp.gamenomeprojectserver.domain.security.jwt.JwtResponseDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignInDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.SignUpDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserDto
-import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.UserUpdateProfileDto
+import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
+import sparta.nbcamp.gamenomeprojectserver.domain.user.dto.*
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 
 @RequestMapping("api/v1")
 @RestController
 class UserController(
-    val userService: UserService
-){
+    val userService: UserService,
+    val authService: AuthService
+) {
     @PostMapping("/signup")
     fun signUp(@RequestBody request: SignUpDto): ResponseEntity<UserDto> {
+        if (request.password != request.confirmPassword) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request))
     }
 
@@ -28,7 +29,7 @@ class UserController(
 
     @PostMapping("/signout")
     fun signOut(): ResponseEntity<Unit> {
-        // TODO: signOut Logic (세션은 Service 안가고 Controller에서 바로 끊었는데 JWT는 아직 불확실함)
+        // TODO: 로그아웃 로직에 대해서는 이슈 #82 참고
 
         return ResponseEntity.status(HttpStatus.OK).build()
     }
@@ -43,20 +44,48 @@ class UserController(
         @PathVariable("userId") userId: Long,
         @RequestBody request: UserUpdateProfileDto
     ): ResponseEntity<UserDto> {
+        if (request.password != request.confirmPassword) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(userId, request))
     }
 
     @DeleteMapping("/users/deactivate")
-    fun deactivateUser(): ResponseEntity<Unit> {
-        TODO()
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(userId))
+    fun deactivateUser(request: HttpServletRequest): ResponseEntity<Unit> {
+        val authorization =
+            request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deactivateUser(authorization))
     }
 
     @GetMapping("/token/checkUserId")
     fun checkUserId(
         request: HttpServletRequest
     ): ResponseEntity<Long> {
-        val authorization = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserIdFromToken(authorization))
+        val authorization =
+            request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        return ResponseEntity.status(HttpStatus.OK).body(authService.getUserIdFromToken(authorization))
+    }
+
+    @GetMapping("/users/checkNickname")
+    fun checkNicknameDuplicate(@RequestParam nickname: String): ResponseEntity<Boolean> {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.isNicknameDuplicate(nickname))
+    }
+
+    @PostMapping("/users/email")
+    fun sendMail(
+        @RequestParam email: String
+    ): ResponseEntity<SendMailResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.sendMail(email))
+    }
+
+    @PostMapping("/users/email/check")
+    fun checkCertification(
+        @RequestParam email: String,
+        @RequestParam code: String
+    ): ResponseEntity<SendMailResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.checkCertification(email, code))
     }
 }

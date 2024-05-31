@@ -1,11 +1,14 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.dto
 
+import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 
 abstract class EmailPasswordValidatableDto(
+
     @field:NotBlank
     @field:Size(max = 50, message = "Email must be 50 characters or less")
+    @field:Email(message = "Email must be a valid email address")
     open val email: String,
 
     @field:NotBlank

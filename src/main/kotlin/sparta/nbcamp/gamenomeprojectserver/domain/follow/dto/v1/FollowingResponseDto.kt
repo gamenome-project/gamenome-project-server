@@ -1,12 +1,16 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1
 
+import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
+
 data class FollowingResponseDto(
-    val followingUser: FollowingUser
-){
+    val userId: Long,
+    val followingUserList: List<FollowingUser>
+) {
     companion object {
-        fun from(followingUser: FollowingUser): FollowingResponseDto{
+        fun from(userId: Long, userList: List<User>): FollowingResponseDto {
             return FollowingResponseDto(
-                followingUser = followingUser
+                userId = userId,
+                followingUserList = userList.map { FollowingUser.from(it) }
             )
         }
     }

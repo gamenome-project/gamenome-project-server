@@ -2,6 +2,8 @@ package sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import org.hibernate.annotations.UpdateTimestamp
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
@@ -9,6 +11,8 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "review")
+@SQLDelete(sql = "UPDATE review SET is_deleted = true, deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 class Review private constructor(
     @Column(name = "game_name", columnDefinition = "text", nullable = false)
     var gameName: String,
