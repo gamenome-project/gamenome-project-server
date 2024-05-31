@@ -4,4 +4,4 @@ data class ReviewUpdateDto(
     override val gameName: String,
     override val title: String,
     override val description: String,
-) : ReviewValidatableDto(gameName, title, description)
+    ) : ReviewValidatableDto(gameName, title, description)

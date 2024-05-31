@@ -105,5 +105,6 @@ class UserServiceImpl(
         message.setText("이메일 인증코드: $code")
         message.setFrom(InternetAddress(Secret.RECIPIENT))
         return message
+        
     }
 }

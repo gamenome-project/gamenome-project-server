@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import jakarta.persistence.Table
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.CreateCommentRequestDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
+import sparta.nbcamp.gamenomeprojectserver.domain.starScore.model.v1.StarScore
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 

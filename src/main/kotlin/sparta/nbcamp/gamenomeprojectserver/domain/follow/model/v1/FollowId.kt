@@ -5,6 +5,6 @@ import java.io.Serializable
 
 @Embeddable
 class FollowId(
-    var user: Long = 0,
-    var followingUserId: Long = 0
-):Serializable
+    val user: Long = 0,
+    val followingUserId: Long = 0,
+): Serializable
