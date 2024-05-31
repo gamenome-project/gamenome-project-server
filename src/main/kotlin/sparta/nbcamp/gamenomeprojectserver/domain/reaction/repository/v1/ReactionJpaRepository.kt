@@ -9,4 +9,6 @@ interface ReactionJpaRepository: JpaRepository<Reaction, Long> {
     fun findByCommentIdAndReaction(commentId: Long, reaction: ReactionType):Reaction?
 
     fun deleteAllByCommentId(commentId: Long)
+
+    fun countByCommentIdAndReaction(commentId: Long, reactionType: ReactionType): Int
 }

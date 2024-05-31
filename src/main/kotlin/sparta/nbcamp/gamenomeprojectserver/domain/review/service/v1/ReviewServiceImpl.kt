@@ -4,16 +4,16 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import sparta.nbcamp.gamenomeprojectserver.common.setStarScore
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.service.v1.CommentService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.starScore.service.v1.StarScoreService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
@@ -21,7 +21,9 @@ class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
     private val reportService: ReportService,
     private val userRepository: UserRepository,
-    private val commentService: CommentService
+    private val commentService: CommentService,
+    private val starScoreService: StarScoreService,
+    private val userService: UserService,
 ) : ReviewService {
     @Transactional
     override fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto {
@@ -35,9 +37,11 @@ class ReviewServiceImpl(
     }
 
     @Transactional
-    override fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto): ReviewDto {
+    override fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto, token: String): ReviewDto {
+
         val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         foundReview.updateReviewField(reviewUpdateDTO)
+
         return ReviewDto.from(foundReview)
     }
 
@@ -47,9 +51,11 @@ class ReviewServiceImpl(
         commentService.deleteCommentsByReviewId(reviewId)
     }
 
-    override fun getReview(reviewId: Long): ReviewDto {
+    override fun getReview(reviewId: Long): GetReviewDto {
         val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
-        return ReviewDto.from(foundReview)
+        val result = starScoreService.getAverageScore(reviewId)
+
+        return GetReviewDto.from(foundReview, setStarScore(result))
     }
 
     @Transactional

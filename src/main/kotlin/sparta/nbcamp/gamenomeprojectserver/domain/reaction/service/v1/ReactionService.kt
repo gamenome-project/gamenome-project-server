@@ -2,6 +2,7 @@ package sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1
 
 import org.springframework.stereotype.Service
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.dto.v1.ReactionResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.Reaction
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.repository.v1.ReactionRepository
@@ -31,6 +32,17 @@ class ReactionService(
 
     fun delete(comment: Comment) {
         reactionRepository.deleteAllByCommentId(comment.id!!)
+    }
+
+    fun getCount(idList: List<Long>): List<ReactionResponseDto>{
+        val list = mutableListOf<ReactionResponseDto>()
+        idList.forEach { id ->
+            val like = reactionRepository.countByCommentIdAndReaction(id, ReactionType.Like)
+            val disLike = reactionRepository.countByCommentIdAndReaction(id, ReactionType.DisLike)
+            list.add(ReactionResponseDto(id, like, disLike))
+        }
+
+        return list
     }
 
 }

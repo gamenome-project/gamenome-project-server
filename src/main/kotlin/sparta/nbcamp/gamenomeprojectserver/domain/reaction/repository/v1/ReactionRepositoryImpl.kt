@@ -18,6 +18,10 @@ class ReactionRepositoryImpl(
         return reactionJpaRepository.findByCommentIdAndReaction(commentId, reaction)
     }
 
+    override fun countByCommentIdAndReaction(commentId: Long, reactionType: ReactionType): Int {
+        return reactionJpaRepository.countByCommentIdAndReaction(commentId, reactionType)
+    }
+
     override fun save(reaction: Reaction): Reaction {
         return reactionJpaRepository.save(reaction)
     }
