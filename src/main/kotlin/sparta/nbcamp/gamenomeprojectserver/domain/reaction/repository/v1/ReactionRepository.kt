@@ -8,6 +8,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.ReactionType
 interface ReactionRepository {
     fun findAll(pageable: Pageable = Pageable.unpaged()): Page<Reaction>
     fun findByCommentIdAndReaction(commentId: Long, reaction: ReactionType): Reaction?
+    fun countByCommentIdAndReaction(commentId: Long, reactionType: ReactionType): Int
     fun save(reaction: Reaction): Reaction
     fun delete(reaction: Reaction)
     fun deleteById(reactionId: Long)

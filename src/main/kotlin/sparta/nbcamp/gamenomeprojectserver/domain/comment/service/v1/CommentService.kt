@@ -9,6 +9,7 @@ import sparta.nbcamp.gamenomeprojectserver.common.setStarScore
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.reaction.dto.v1.ReactionResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.model.v1.ReactionType
 import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionService
 import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
@@ -55,7 +56,15 @@ class CommentService(
         //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
         if (!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId)
         val result = commentRepository.findAllByReviewId(reviewId, pageable)
-        return result.map { GetCommentResponseDto.from(it) }
+        val idList = result.map { it.id!! }.toMutableList()
+
+        val reaction = reactionService.get(idList)
+
+        val commentToReactionMap = idList.zip(reaction).toMap()
+
+        return result.map {
+            val reactionForComment = commentToReactionMap[it.id]
+            GetCommentResponseDto.from(it, reactionForComment!! ) }
         //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
 
