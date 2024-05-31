@@ -4,6 +4,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 
 interface UserRepository {
     fun findAllById(ids: List<Long>): List<User>
+    fun findByNicknameAndProvider(nickname: String, provider: String): User?
     fun findByEmail(email: String): User?
     fun find(userId: Long): User?
     fun exists(userId: Long): Boolean

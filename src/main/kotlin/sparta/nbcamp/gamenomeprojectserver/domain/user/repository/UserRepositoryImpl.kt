@@ -12,6 +12,10 @@ class UserRepositoryImpl(
         return userJpaRepository.findAllById(ids)
     }
 
+    override fun findByNicknameAndProvider(nickname: String, provider: String): User? {
+        return userJpaRepository.findByProfileNicknameAndProvider(nickname, provider)
+    }
+
     override fun findByEmail(email: String): User? {
         return userJpaRepository.findByEmail(email)
     }

@@ -23,6 +23,9 @@ class User private constructor(
     @Column(name = "role", nullable = false)
     var role: UserRole = UserRole.User,
 
+    @Column(nullable = true)
+    val provider: String? = null,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
@@ -69,14 +72,16 @@ class User private constructor(
     }
 
     companion object {
-        fun fromDto(request: SignUpDto): User {
+        fun fromDto(request: SignUpDto, provider: String? = null): User {
             return User(
                 email = request.email,
                 password = request.password,
                 profile = Profile(
                     nickname = request.nickname,
                     aboutSummary = request.aboutSummary,
-                )
+                    profileImageUrl = request.profileImageUrl
+                ),
+                provider = provider
             ).apply { this.validate() }
         }
     }
