@@ -26,6 +26,10 @@ class ReviewRepositoryImpl(
         return reviewJpaRepository.existsById(reviewId)
     }
 
+    override fun findAllByManyUserId(userId: List<Long>, pageable: Pageable): Page<Review> {
+        return reviewJpaRepository.findAllByManyUserId(userId, pageable)
+    }
+
     override fun save(review: Review): Review {
         return reviewJpaRepository.save(review)
     }

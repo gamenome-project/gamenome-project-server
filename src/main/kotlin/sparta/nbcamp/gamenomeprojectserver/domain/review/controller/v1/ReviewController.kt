@@ -25,10 +25,12 @@ class ReviewController(
         request: HttpServletRequest
     ): ResponseEntity<ReviewDto> {
 
+        val token = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(reviewService.createReview(reviewCreateDTO))
+            .body(reviewService.createReview(reviewCreateDTO, token))
 
     }
 
@@ -94,7 +96,7 @@ class ReviewController(
             .body(reviewService.getReviewReport())
     }
 
-    @GetMapping
+    @GetMapping("/follow")
     fun getFollowingUserReviewList(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int,

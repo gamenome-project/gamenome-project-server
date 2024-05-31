@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.*
 
 interface ReviewService {
-    fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto
+    fun createReview(reviewCreateDTO: ReviewCreateDto, token: String): ReviewDto
 
     fun getReviewPage(pageable: Pageable): Page<ReviewDto>
 

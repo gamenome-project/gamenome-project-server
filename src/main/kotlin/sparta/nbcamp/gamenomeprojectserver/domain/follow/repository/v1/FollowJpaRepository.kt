@@ -10,7 +10,7 @@ interface FollowJpaRepository: JpaRepository<Follow, Long> {
 
     fun findByFollowingUserId(followingUserId: Long): Follow?
 
-    @Query("SELECT f.followingUserId FROM Follow f WHERE f.user.id = :userId")
     fun findAllByUserId(userId: Long): List<Follow>
+
     fun deleteByUserIdAndFollowingUserId(userId: Long, followingUserId: Long)
 }

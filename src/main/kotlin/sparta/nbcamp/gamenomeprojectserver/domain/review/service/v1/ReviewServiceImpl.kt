@@ -29,9 +29,12 @@ class ReviewServiceImpl(
     private val authService: AuthService,
 ) : ReviewService {
     @Transactional
-    override fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto {
+    override fun createReview(reviewCreateDTO: ReviewCreateDto, token: String): ReviewDto {
 
-        val review = Review.fromDto(reviewCreateDTO)
+        val userId = authService.getUserIdFromToken(token)
+        val user = userRepository.find(userId)?: throw ModelNotFoundException("User", userId)
+
+        val review = Review.fromDto(reviewCreateDTO, user)
         return ReviewDto.from(reviewRepository.save(review))
     }
 
@@ -82,11 +85,12 @@ class ReviewServiceImpl(
 
     override fun getFollowingReviewPage(token: String, pageable: Pageable): Page<ReviewDto> {
         val userId = authService.getUserIdFromToken(token)
-
         val followingResult = followService.followRepository.findAllByUserId(userId)
 
-        val filterReview = reviewRepository.findAllById(followingResult.map { it.followingUserId })
+       val result = reviewRepository.findAllByManyUserId(followingResult.map { it.followingUserId }, pageable)
 
-        return filterReview.map { ReviewDto.from(it) }
+
+
+        return result.map { ReviewDto.from(it) }
     }
 }
