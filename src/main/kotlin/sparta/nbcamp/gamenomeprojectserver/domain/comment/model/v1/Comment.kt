@@ -9,6 +9,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.CreateCommentRequestDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
+import sparta.nbcamp.gamenomeprojectserver.domain.starScore.model.v1.StarScore
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 
@@ -45,6 +46,7 @@ class Comment private constructor(
 
     @Column(name = "deleted_at", nullable = true)
     val deletedAt: LocalDateTime? = null
+
 
     fun update(comment: String) {
         this.content = comment

@@ -1,5 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.review.controller.v1
 
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -45,12 +46,15 @@ class ReviewController(
     @PutMapping("/{reviewId}")
     fun updateReview(
         @PathVariable reviewId: Long,
-        @RequestBody reviewUpdateDTO: ReviewUpdateDto
+        @RequestBody reviewUpdateDTO: ReviewUpdateDto,
+        request : HttpServletRequest
     ): ResponseEntity<ReviewDto> {
+
+        val token = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(reviewService.updateReview(reviewId, reviewUpdateDTO))
+            .body(reviewService.updateReview(reviewId, reviewUpdateDTO, token))
     }
 
     @DeleteMapping("/{reviewId}")

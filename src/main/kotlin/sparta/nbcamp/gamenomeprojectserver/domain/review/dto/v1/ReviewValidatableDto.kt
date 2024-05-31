@@ -1,7 +1,9 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1
 
+import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
+import sparta.nbcamp.gamenomeprojectserver.common.annotation.FloatRange
 
 abstract class ReviewValidatableDto(
     @field:NotBlank
@@ -15,4 +17,6 @@ abstract class ReviewValidatableDto(
     @field:NotBlank
     @field:Size(max = 2000, message = "Description must be 2000 characters or less")
     open val description: String,
+
+
 )

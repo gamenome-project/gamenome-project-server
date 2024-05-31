@@ -6,7 +6,6 @@ import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 
 data class CreateCommentRequestDto(
     override val content: String,
-
-    val stars: Double,
-): CommentContentValidatableDto(content)
+    override val score: Float,
+): CommentContentValidatableDto(content, score)
 

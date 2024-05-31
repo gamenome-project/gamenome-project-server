@@ -3,6 +3,7 @@ package sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 
 
@@ -15,5 +16,6 @@ interface CommentRepository: JpaRepository<Comment, Long> {
 
 
     fun findByIdAndReviewId(reviewId: Long, commentId: Long): Comment
+
 
 }

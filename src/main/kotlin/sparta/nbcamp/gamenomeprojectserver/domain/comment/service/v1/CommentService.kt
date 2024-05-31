@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import sparta.nbcamp.gamenomeprojectserver.common.setStarScore
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.model.v1.Comment
 import sparta.nbcamp.gamenomeprojectserver.domain.comment.repository.v1.CommentRepository
@@ -13,6 +14,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.reaction.service.v1.ReactionSe
 import sparta.nbcamp.gamenomeprojectserver.domain.report.model.v1.EntityType
 import sparta.nbcamp.gamenomeprojectserver.domain.report.service.ReportService
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.starScore.service.v1.StarScoreService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
@@ -25,10 +27,12 @@ class CommentService(
     private val reactionService: ReactionService,
     private val userRepository: UserRepository,
     private val reportService: ReportService,
+    private val starScoreService: StarScoreService
 ) {
 
     @Transactional
     fun createComment(reviewId: Long, createCommentRequestDto: CreateCommentRequestDto, token:String): CommentResponseDto {
+        val score = setStarScore(createCommentRequestDto.score)
 
         val user = userService.getUserIdFromToken(token)
 
@@ -38,9 +42,10 @@ class CommentService(
 
         val result = Comment.fromDto(createCommentRequestDto, reviewResult, userResult)
 
+        starScoreService.giveCommentScore(reviewResult, userResult, result, score)
         commentRepository.save(result)
 
-        return CommentResponseDto.from(result)
+        return CommentResponseDto.from(result, score)
 
     }
 
@@ -53,18 +58,28 @@ class CommentService(
     }
 
     @Transactional
-    fun updateComment(reviewId: Long, commentId: Long, updateCommentRequestDto: UpdateCommentRequestDto
+    fun updateComment(reviewId: Long, commentId: Long, updateCommentRequestDto: UpdateCommentRequestDto, token:String
     ): CommentResponseDto {
-        //TODO("유저 로그인 검증 및 블랙 리스트 검증")
+        val score = setStarScore(updateCommentRequestDto.score)
+        val user = userService.getUserIdFromToken(token)
+
+        val userResult = userRepository.findByIdOrNull(user)?: throw ModelNotFoundException("User", user)
+
         commentRepository.findByIdOrNull(commentId)?: throw ModelNotFoundException("comment", reviewId )
+
+        val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
+
 
         val result = commentRepository.findByIdAndReviewId(reviewId, commentId)
 
         if(result.isDeleted) throw ModelNotFoundException("comment", reviewId )
 
+        starScoreService.giveCommentScore(reviewResult, userResult, result, score)
+
+
         result.update(updateCommentRequestDto.content)
 
-        return CommentResponseDto.from(result)
+        return CommentResponseDto.from(result, score)
     }
 
     @Transactional
@@ -75,6 +90,7 @@ class CommentService(
 
         commentRepository.delete(result)
         reactionService.delete(result)
+        starScoreService.delete(result)
     }
 
     fun createReportComment(

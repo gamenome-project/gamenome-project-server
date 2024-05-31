@@ -12,7 +12,7 @@ interface ReviewService {
 
     fun getReviewPage(pageable: Pageable): Page<ReviewDto>
 
-    fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto): ReviewDto
+    fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto, token: String): ReviewDto
 
     fun deleteReview(reviewId: Long)
 

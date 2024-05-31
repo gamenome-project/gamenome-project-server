@@ -13,14 +13,18 @@ import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
 import sparta.nbcamp.gamenomeprojectserver.domain.review.repository.v1.ReviewRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.starScore.service.v1.StarScoreService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.user.service.v1.UserService
 import sparta.nbcamp.gamenomeprojectserver.exception.ModelNotFoundException
 
 @Service
 class ReviewServiceImpl(
     private val reviewRepository: ReviewRepository,
     private val reportService: ReportService,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val starScoreService: StarScoreService,
+    private val userService: UserService,
 ) : ReviewService {
     @Transactional
     override fun createReview(reviewCreateDTO: ReviewCreateDto): ReviewDto {
@@ -34,9 +38,13 @@ class ReviewServiceImpl(
     }
 
     @Transactional
-    override fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto): ReviewDto {
+    override fun updateReview(reviewId: Long, reviewUpdateDTO: ReviewUpdateDto, token: String): ReviewDto {
+
+       userService.getUserIdFromToken(token)
+
         val foundReview = reviewRepository.findByIdOrNull(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         foundReview.updateReviewField(reviewUpdateDTO)
+
         return ReviewDto.from(foundReview)
     }
 

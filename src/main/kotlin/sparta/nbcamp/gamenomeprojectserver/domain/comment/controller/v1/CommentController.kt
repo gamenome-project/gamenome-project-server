@@ -1,5 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.comment.controller.v1
 
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -21,8 +22,11 @@ class CommentController(
     fun createComment(
         @PathVariable reviewId: Long,
         @RequestBody createCommentRequestDto: CreateCommentRequestDto,
-        @RequestParam token: String,
+        request: HttpServletRequest
     ): ResponseEntity<CommentResponseDto>{
+
+        val token = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
@@ -37,6 +41,7 @@ class CommentController(
         @RequestParam(defaultValue = "CreatedAtAsc") sort: CommentSort
         ): ResponseEntity<Page<GetCommentResponseDto>>{
         val pageable: Pageable = PageRequest.of(page, size, sort.setSortType())
+
 
        return ResponseEntity
            .status(HttpStatus.OK)
@@ -59,12 +64,15 @@ class CommentController(
         @PathVariable reviewId: Long,
         @PathVariable commentId: Long,
         @RequestBody updateCommentRequestDto: UpdateCommentRequestDto,
-        @RequestParam token: String,
+        request: HttpServletRequest
     ):ResponseEntity<CommentResponseDto>{
+
+        val token = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(commentService.updateComment(reviewId, commentId, updateCommentRequestDto))
+            .body(commentService.updateComment(reviewId, commentId, updateCommentRequestDto, token))
     }
 
     @PostMapping("/{commentId}/report")
