@@ -7,6 +7,7 @@ import org.hibernate.annotations.SQLRestriction
 import org.hibernate.annotations.UpdateTimestamp
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
+import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 import java.time.LocalDateTime
 
 @Entity
@@ -19,6 +20,10 @@ class Review private constructor(
 
     @Column(name = "title", columnDefinition = "text", nullable = false)
     var title: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    val user: User,
 
     @Column(name = "description", columnDefinition = "text", nullable = false)
     var description: String,
@@ -61,11 +66,12 @@ class Review private constructor(
     }
 
     companion object {
-        fun fromDto(reviewCreateDto: ReviewCreateDto): Review {
+        fun fromDto(reviewCreateDto: ReviewCreateDto, user: User): Review {
             return Review(
                 gameName = reviewCreateDto.gameName,
                 title = reviewCreateDto.title,
                 description = reviewCreateDto.description,
+                user = user
             ).apply { this.validate() }
         }
     }

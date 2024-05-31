@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.review.etc.ReviewSort
 import sparta.nbcamp.gamenomeprojectserver.domain.review.etc.setSortType
@@ -19,10 +20,17 @@ class ReviewController(
 ){
 
     @PostMapping
-    fun createReview(@RequestBody reviewCreateDTO: ReviewCreateDto): ResponseEntity<ReviewDto> {
+    fun createReview(
+        @RequestBody reviewCreateDTO: ReviewCreateDto,
+        request: HttpServletRequest
+    ): ResponseEntity<ReviewDto> {
+
+        val token = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
+
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(reviewService.createReview(reviewCreateDTO))
+            .body(reviewService.createReview(reviewCreateDTO, token))
 
     }
 
@@ -86,5 +94,20 @@ class ReviewController(
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(reviewService.getReviewReport())
+    }
+
+    @GetMapping("/follow")
+    fun getFollowingUserReviewList(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int,
+        @RequestParam(defaultValue = "CreatedAtAsc") sort: ReviewSort,
+        request : HttpServletRequest
+    ):ResponseEntity<Page<ReviewDto>>{
+
+        val pageable: Pageable = PageRequest.of(page, size, sort.setSortType())
+
+        val token = request.getHeader("Authorization") ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getFollowingReviewPage(token, pageable))
     }
 }

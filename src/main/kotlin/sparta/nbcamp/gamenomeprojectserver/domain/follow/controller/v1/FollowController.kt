@@ -37,4 +37,6 @@ class FollowController(
         return ResponseEntity.status(HttpStatus.OK).body(followService.getFollowingUserList(token))
     }
 
+
+
 }

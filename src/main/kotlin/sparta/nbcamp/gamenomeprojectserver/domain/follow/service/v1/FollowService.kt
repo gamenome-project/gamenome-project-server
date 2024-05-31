@@ -5,6 +5,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingRequest
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.dto.v1.FollowingResponseDto
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.model.v1.Follow
 import sparta.nbcamp.gamenomeprojectserver.domain.follow.repository.v1.FollowRepository
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
 import sparta.nbcamp.gamenomeprojectserver.domain.security.service.AuthService
 import sparta.nbcamp.gamenomeprojectserver.domain.user.repository.UserRepository
 import sparta.nbcamp.gamenomeprojectserver.exception.DuplicatedException
@@ -30,8 +31,8 @@ class FollowService(
             if (userId == followingRequestDto.followingUserId) {
                 throw DuplicatedException("본인은 팔로우 할 수 없습니다")
             }
-            val followe = Follow.from(followingRequestDto.followingUserId, user)
-            followRepository.save(followe)
+            val followClone = Follow.from(followingRequestDto.followingUserId, user)
+            followRepository.save(followClone)
         }
     }
 
@@ -44,4 +45,6 @@ class FollowService(
 
         return FollowingResponseDto.from(userId, allUser)
     }
+
+
 }
