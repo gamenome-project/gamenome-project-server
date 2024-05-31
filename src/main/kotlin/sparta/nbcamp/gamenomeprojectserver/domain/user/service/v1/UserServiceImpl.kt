@@ -22,7 +22,7 @@ class UserServiceImpl(
     val userRepository: UserRepository,
     val authService: AuthService,
     val passwordEncoder: PasswordEncoder,
-//    val javaMailSender: JavaMailSender,
+    val javaMailSender: JavaMailSender,
     val redisUtils: RedisUtils,
 ) : UserService {
 
@@ -81,7 +81,7 @@ class UserServiceImpl(
     override fun sendMail(email: String): SendMailResponse {
         val code = UUID.randomUUID().toString().substring(0, 6)
         val mimeMessage = createMessage(code, email)
-//        javaMailSender.send(mimeMessage)
+        javaMailSender.send(mimeMessage)
         redisUtils.setDataExpire(email, code)
         return SendMailResponse(message = "메일 발송 완료")
     }
@@ -99,12 +99,11 @@ class UserServiceImpl(
     }
 
     private fun createMessage(code: String, email: String): MimeMessage {
-//        val message: MimeMessage = javaMailSender.createMimeMessage()
-//        message.addRecipients(Message.RecipientType.TO, email)
-//        message.subject = "gamenome 프로젝트 인증 번호입니다."
-//        message.setText("이메일 인증코드: $code")
-//        message.setFrom(InternetAddress(Secret.RECIPIENT))
-//        return message
-        TODO()
+        val message: MimeMessage = javaMailSender.createMimeMessage()
+        message.addRecipients(Message.RecipientType.TO, email)
+        message.subject = "gamenome 프로젝트 인증 번호입니다."
+        message.setText("이메일 인증코드: $code")
+        message.setFrom(InternetAddress(Secret.RECIPIENT))
+        return message
     }
 }
