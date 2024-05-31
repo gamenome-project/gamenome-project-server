@@ -19,8 +19,15 @@ class StarScoreService(
     @Transactional
     fun giveCommentScore(review: Review, user: User, comment: Comment, starScore:Float){
 
+        if(!starScoreRepository.existsByCommentId(comment.id!!)){
             val result = StarScore.create(user, review, comment, starScore)
             starScoreRepository.save(result)
+        }else{
+            val result = starScoreRepository.findByCommentId(comment.id!!)
+
+            result.score = starScore
+        }
+
     }
 
     fun delete(comment: Comment){
@@ -28,9 +35,9 @@ class StarScoreService(
         starScoreRepository.deleteByCommentId(comment.id!!)
     }
 
-//    fun getAverageScore(review: Review):Float{
-//
-//        val peopleCount = starScoreRepository.countByReviewId(review.id)
-//
-//    }
+    fun getAverageScore(reviewId: Long):Float{
+
+        return starScoreRepository.averageByReviewId(reviewId)
+
+    }
 }

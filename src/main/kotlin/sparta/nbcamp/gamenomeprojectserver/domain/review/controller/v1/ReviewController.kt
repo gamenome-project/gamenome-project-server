@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewCreateDto
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewDto
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewReportDto
-import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.ReviewUpdateDto
+import sparta.nbcamp.gamenomeprojectserver.domain.review.dto.v1.*
 import sparta.nbcamp.gamenomeprojectserver.domain.review.etc.ReviewSort
 import sparta.nbcamp.gamenomeprojectserver.domain.review.etc.setSortType
 import sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1.ReviewService
@@ -68,7 +65,7 @@ class ReviewController(
     @GetMapping("/{reviewId}")
     fun getReview(
         @PathVariable reviewId: Long
-    ): ResponseEntity<ReviewDto> {
+    ): ResponseEntity<GetReviewDto> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(reviewService.getReview(reviewId))

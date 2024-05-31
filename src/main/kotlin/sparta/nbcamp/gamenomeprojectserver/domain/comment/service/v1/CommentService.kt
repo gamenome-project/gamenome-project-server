@@ -70,14 +70,8 @@ class CommentService(
         val user = authService.getUserIdFromToken(token)
 
         val userResult = userRepository.find(user)?: throw ModelNotFoundException("User", user)
-
         commentRepository.find(commentId)?: throw ModelNotFoundException("comment", reviewId )
-
-
         val reviewResult = reviewRepository.findByIdOrNull(reviewId)?: throw ModelNotFoundException("review", reviewId )
-
-
-        val commentResult = commentRepository.findByIdAndReviewId(reviewId, commentId)
 
         if (result.isDeleted) throw RuntimeException("이미 삭제된 댓글입니다.")
 
