@@ -1,6 +1,14 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.user.repository
 
-import org.springframework.data.jpa.repository.JpaRepository
 import sparta.nbcamp.gamenomeprojectserver.domain.user.model.User
 
-interface UserRepository : JpaRepository<User, Long>
+interface UserRepository {
+    fun findAllById(ids: List<Long>): List<User>
+    fun findByNicknameAndProvider(nickname: String, provider: String): User?
+    fun findByEmail(email: String): User?
+    fun find(userId: Long): User?
+    fun exists(userId: Long): Boolean
+    fun existsByNickname(nickname: String): Boolean
+    fun save(user: User): User
+    fun delete(user: User)
+}
