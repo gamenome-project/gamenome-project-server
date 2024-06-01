@@ -1,5 +1,6 @@
 package sparta.nbcamp.gamenomeprojectserver.domain.review.service.v1
 
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -39,7 +40,17 @@ class ReviewServiceImpl(
     }
 
     override fun getReviewPage(pageable: Pageable): Page<ReviewDto> {
+
+        val reportReview = reportService.getReportsByEntityType(EntityType.Review).distinct()
+
         val foundAllReview = reviewRepository.findAll(pageable)
+
+        foundAllReview.removeAll { review ->
+            reportReview.any { report ->
+                review.id == report.entityId && reportService.getCountByEntityIdAndEntityType(report.entityId, EntityType.Review) > 5
+            }
+        }
+
         return foundAllReview.map { ReviewDto.from(it) }
     }
 
@@ -62,6 +73,8 @@ class ReviewServiceImpl(
         val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         val result = starScoreService.getAverageScore(reviewId)
 
+        if(reportService.getCountByEntityIdAndEntityType(reviewId, EntityType.Review) > 5) throw ModelNotFoundException("Report review", reviewId)
+
         return GetReviewDto.from(foundReview, setStarScore(result))
     }
 
@@ -72,6 +85,7 @@ class ReviewServiceImpl(
             "User",
             reviewReportDTO.userId
         )
+
         reportService.createReport(user, reviewId, EntityType.Review, reviewReportDTO)
         return ReviewDto.from(foundReview)
     }

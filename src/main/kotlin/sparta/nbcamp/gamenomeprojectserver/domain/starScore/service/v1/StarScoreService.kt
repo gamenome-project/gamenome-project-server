@@ -36,7 +36,8 @@ class StarScoreService(
 
     fun getAverageScore(reviewId: Long):Float{
 
-        return starScoreRepository.averageByReviewId(reviewId)
+        val result = starScoreRepository.averageByReviewId(reviewId) ?: 0.0f
+        return result
 
     }
 }

@@ -31,4 +31,8 @@ class ReportRepositoryImpl(
     override fun deleteById(reportId: Long) {
         return reportJpaRepository.deleteById(reportId)
     }
+
+    override fun countByEntityIdAndEntityType(entityId: Long, entityType: EntityType): Long {
+        return reportJpaRepository.countByEntityIdAndEntityType(entityId, entityType)
+    }
 }

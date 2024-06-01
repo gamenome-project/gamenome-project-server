@@ -52,9 +52,17 @@ class CommentService(
     }
 
     fun getCommentPage(reviewId: Long, pageable: Pageable): Page<GetCommentResponseDto> {
-        //TODO("리뷰 아이디에 대한 코맨트 조회 없으면 throw ModelNotFoundException")
         if (!reviewRepository.existsById(reviewId)) throw ModelNotFoundException("review", reviewId)
         val result = commentRepository.findAllByReviewId(reviewId, pageable)
+        val reportComment = reportService.getReportsByEntityType(EntityType.Comment).distinct()
+
+
+        result.removeAll { it ->
+            reportComment.any { comment ->
+                it.id == comment.entityId && reportService.getCountByEntityIdAndEntityType(comment.entityId, EntityType.Comment) > 5
+            }
+        }
+
         val idList = result.map { it.id!! }.toMutableList()
 
         val reaction = reactionService.getCount(idList)
@@ -64,7 +72,6 @@ class CommentService(
         return result.map {
             val reactionForComment = commentToReactionMap[it.id]
             GetCommentResponseDto.from(it, reactionForComment!! ) }
-        //TODO("조회 시에 신고 된 데이터는 조회 하지 않음")
     }
 
     @Transactional

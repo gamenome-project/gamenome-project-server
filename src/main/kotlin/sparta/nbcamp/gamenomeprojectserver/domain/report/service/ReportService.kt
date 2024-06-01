@@ -39,4 +39,9 @@ class ReportService(
         return reportRepository.save(report)
     }
 
+    fun getCountByEntityIdAndEntityType(entityId: Long, entityType: EntityType): Long {
+        return reportRepository.countByEntityIdAndEntityType(entityId, entityType)
+    }
+
+
 }
