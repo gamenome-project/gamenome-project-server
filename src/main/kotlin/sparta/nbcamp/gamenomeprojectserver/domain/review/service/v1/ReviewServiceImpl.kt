@@ -63,7 +63,7 @@ class ReviewServiceImpl(
         val foundReview = reviewRepository.find(reviewId) ?: throw ModelNotFoundException("Review", reviewId)
         val result = starScoreService.getAverageScore(reviewId)
 
-//        if(reportService.getCountByEntityIdAndEntityType(reviewId, EntityType.Review) > 1) throw EntityNotFoundException("해당 내용은 신고된 내용입니다")
+        if(reportService.getCountByEntityIdAndEntityType(reviewId, EntityType.Review) > 5) throw ModelNotFoundException("Report review", reviewId)
 
         return GetReviewDto.from(foundReview, setStarScore(result))
     }

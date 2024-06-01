@@ -33,6 +33,6 @@ class ReportRepositoryImpl(
     }
 
     override fun countByEntityIdAndEntityType(entityId: Long, entityType: EntityType): Long {
-        TODO("Not yet implemented")
+        return reportJpaRepository.countByEntityIdAndEntityType(entityId, entityType)
     }
 }
