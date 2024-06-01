@@ -18,6 +18,6 @@ interface StarScoreRepository: JpaRepository<StarScore, Long> {
     fun countByReviewId(reviewId: Long): Int
 
     @Query("SELECT avg(s.score) FROM StarScore s WHERE s.review.id = :reviewId")
-    fun averageByReviewId(reviewId: Long):Float
+    fun averageByReviewId(reviewId: Long):Float?
 
 }

@@ -10,4 +10,5 @@ interface ReportRepository {
     fun findByUserId(userId: Long): List<Report>
     fun save(report: Report): Report
     fun deleteById(reportId: Long)
+    fun countByEntityIdAndEntityType(entityId: Long, entityType: EntityType): Long
 }
