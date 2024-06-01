@@ -40,7 +40,17 @@ class ReviewServiceImpl(
     }
 
     override fun getReviewPage(pageable: Pageable): Page<ReviewDto> {
+
+        val reportReview = reportService.getReportsByEntityType(EntityType.Review).distinct()
+
         val foundAllReview = reviewRepository.findAll(pageable)
+
+        foundAllReview.removeAll { review ->
+            reportReview.any { report ->
+                review.id == report.entityId && reportService.getCountByEntityIdAndEntityType(report.entityId, EntityType.Review) > 5
+            }
+        }
+
         return foundAllReview.map { ReviewDto.from(it) }
     }
 

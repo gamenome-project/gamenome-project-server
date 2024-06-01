@@ -43,4 +43,5 @@ class ReportService(
         return reportRepository.countByEntityIdAndEntityType(entityId, entityType)
     }
 
+
 }
