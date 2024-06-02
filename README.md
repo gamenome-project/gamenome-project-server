@@ -325,6 +325,12 @@ classDiagram
 
 ### JWT 토큰 인증
 
+### 이메일 인증
+- 이메일 인증 시 네이버 smtp 사용하여 진행하였습니다.
+- redis 사용하여 이메일 인증 시 사용자 에게 전송한 코드를 이메일을 키로 하여 저장 합니다.
+- 전송 코드 체크 api 에서 사용자가 받은 인증코드와 저장 되어 있는 코드를 비교 합니다.
+- 자세한 내용은 [이메일 인증 및 닉네임 중복 확인 기능](https://github.com/gamenome-project/gamenome-project-server/pull/80) 참고
+
 ## 8-버그-및-이슈-사항
 
 ## 1. `FATAL: Max client connections reached` 애러 발생
