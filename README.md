@@ -314,10 +314,69 @@ classDiagram
 ## 7-기타-추가-기능
 
 ### HTTP -> HTTPS 업데이트
+
+- apache를 기반 으로 한 라이브러리로 HTTPS 업데이트를 구현 했습니다
+- ServletWebServerFactory를 상속 받아서 모든 HTTP로 연결 되는 API들을 전부 HTTPS로 연결을 변경 해주는 로직을 구성 했습니다
+- 현재 인증서 발급 문제로 HTTPS는 main과 dev 브렌치에 Pull Request 를 하지 않은 상태 입니다
+- 자세한 내용은 [#HTTP를 HTTPS로 업그레이드 하기](https://github.com/gamenome-project/gamenome-project-server/issues/64) 참고
+
+
 ### KAKAO OAuth 인증
+
 ### JWT 토큰 인증
 
 ## 8-버그-및-이슈-사항
+
+## 1. `FATAL: Max client connections reached` 애러 발생
+- 해당 오류는 최대 클라이언트 연결에 도달 했다는 오류로 이것은 뭔가 서로 DB에 동시에 접근 할 경우 발생 하는 오류로 확인이 됩니다
+- 확인 결과 supabase 무료 버전은 최대 요청이 15로 설정이 되어 있는데 기준 보다 더 많은 요청이 들어 가면서 발생한 현상 으로 확인 됩니다
+### AS-IS
+- application.yml 
+```
+   spring:
+   datasource:
+   url: jdbc:URL/postgres?user=USER&password=PASSWORD
+```
+### TO-BE
+```
+spring:
+   datasource:
+   url: jdbc:URL/postgres?user=USER&password=PASSWORD&pgbouncer=true&connection_limit=1000
+```
+
+- `pgbouncer=true&connection_limit=1000`해당 값을 붙여서 최대 클라이언트 값을 증가 시켜 주면 정상적 으로 작동 되는 걸 확인할 수 있습니다 
+- 이후 supabase 에 접속해서 요청 개수를 늘려 주면서 애러 해결을 하였습니다
+
+## 2. ApiV1MappingConfig 설정 시 Mapping 애러 발생
+
+## 3. JWT Token userId 캐스팅 실패
+
+## 4. StarScore 복합키 데이터 베이스 생성시에 null one-to-one property 발생 현상
+
+### 1. Comment -> `EntityNotFoundException unable to find with id 0` 애러 발생
+
+#### AS-IS
+   - 코맨트가 Id가 0으로 Entity를 찾는 문제가 발생 하였습니다
+
+#### TO-BE
+   - 해당 부분은 복합키를 설정 하는 과정에서 0을 조회하는 현상 이라고 원인을 파악 했습니다, `@NotFound` Annotation 을 사용 하여 해당 현상을 해결 하였습니다
+
+### 2. user -> duplicated primary key 애러 발생
+
+#### AS-IS
+   -  user 가 primary key 로 설정이 되어 중복 값이 발생 하여 발생된 애러였습니다
+   -  기존에 작업 실수로 `user`가 foreign Key가 들어가 있어야 하는데 primary key 로 들어가 있는 부분 확인 하였습니다
+
+#### TO-BE
+   - 기존에 작업 실수로 `user`가 primary key로 들어가 있는 부분 확인 하고 제외 처리 후에 foreign Key 로 재설정 완료 했습니다
+
+### 3. comment -> attempted to assign id from null one-to-one property 애러 발생
+
+#### AS-IS
+   - 1:1 맵핑 관계에서 코맨트의 ID가 `null`을 할당하려고 시도
+   - `comment`가 create 하는 과정에서 동시에 `star_score`도 create 가 되는 로직 에서 `comment`가 create 이후에 `star_score`도 create 이후에 `comment` 데이터 에도 `null` 값이 할당 되는 문제 발생
+#### TO-BE
+   - `cascodetype.MERGE` 를 사용하여 부모 Entity가 생성을 시도 할 때 자식 Entity 도 병합 하여 생성 시도 할 수 있게 끔 조치 하였습니다
 
 
 # 3-환경-변수
