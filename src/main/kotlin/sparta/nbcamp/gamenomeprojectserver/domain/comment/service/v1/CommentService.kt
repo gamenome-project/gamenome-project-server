@@ -42,12 +42,11 @@ class CommentService(
 
         val result = Comment.fromDto(createCommentRequestDto, reviewResult, userResult)
 
-        starScoreService.giveCommentScore(reviewResult, userResult, result, score)
+        val comment = commentRepository.save(result)
 
-        commentRepository.save(result)
+        starScoreService.giveCommentScore(reviewResult, userResult, comment, score)
 
-
-        return CommentResponseDto.from(result, score)
+        return CommentResponseDto.from(comment, score)
 
     }
 

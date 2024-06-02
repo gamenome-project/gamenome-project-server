@@ -4,6 +4,7 @@ import sparta.nbcamp.gamenomeprojectserver.domain.review.model.v1.Review
 import java.time.LocalDateTime
 
 data class GetReviewDto(
+    val id: Long,
     val gameName: String,
     val title: String,
     val description: String,
@@ -15,6 +16,7 @@ data class GetReviewDto(
     companion object {
         fun from(review: Review, score: Float): GetReviewDto {
             return GetReviewDto(
+                review.id!!,
                 review.gameName,
                 review.title,
                 review.description,

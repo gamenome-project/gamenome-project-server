@@ -30,7 +30,7 @@ class Comment private constructor(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = 0
+    val id: Long? = null
 
     @Column(name = "is_deleted", nullable = false)
     var isDeleted: Boolean = false
