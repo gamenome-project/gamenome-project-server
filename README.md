@@ -322,8 +322,13 @@ classDiagram
 
 
 ### KAKAO OAuth 인증
+ - 카카오의 인가 API로 요청을 보내서 로그인 요청 / 정보 제공 동의 화면 출력등을 처리하고 완료되면 인가 코드를 전달받습니다.
+ - 인가 코드를 다시 토큰 발급 API로 보내서 토큰을 발급 받은 후 해당 토큰을 통해 카카오의 유저 정보를 조회하여 필요한 정보를 수집후 DB에서 생성 / 조회를 통한 회원가입, 로그인을 진행했습니다.
 
 ### JWT 토큰 인증
+ - Spring security 없이 io.jsonwebtoken:jjwt만 사용해서 JJWT를 생성하고 적절한 Payload를 담아 생성해 로그인 성공시 발급하게 했습니다.
+ - Refresh token까진 구현하지 못했고 요청 Header에서 Authorization을 통해 user_id가 들어있는 JWT를 받아 Auth service에서 JWT를 처리하고 각 서비스에서 적절하게 user_id를 이용할 수 있게 했습니다.
+
 
 ### 이메일 인증
 - 이메일 인증 시 네이버 smtp 사용하여 진행하였습니다.
@@ -336,6 +341,8 @@ classDiagram
 ## 1. `FATAL: Max client connections reached` 애러 발생
 - 해당 오류는 최대 클라이언트 연결에 도달 했다는 오류로 이것은 뭔가 서로 DB에 동시에 접근 할 경우 발생 하는 오류로 확인이 됩니다
 - 확인 결과 supabase 무료 버전은 최대 요청이 15로 설정이 되어 있는데 기준 보다 더 많은 요청이 들어 가면서 발생한 현상 으로 확인 됩니다
+- Spring boot가 사용하는 JDBC Connection pool 프레임워크인 HikariCP는 기본적으로 10개의 커넥션을 DB에 연결해두는데 3명이서 사용하느라 Default가 15인 Supabase pool 사용량이 초과됐고 jdbc connection을 줄이기 보단 Supabase의 pool을 늘려서 해결 하였습니다
+
 ### AS-IS
 - application.yml 
 ```
@@ -353,11 +360,20 @@ spring:
 - `pgbouncer=true&connection_limit=1000`해당 값을 붙여서 최대 클라이언트 값을 증가 시켜 주면 정상적 으로 작동 되는 걸 확인할 수 있습니다 
 - 이후 supabase 에 접속해서 요청 개수를 늘려 주면서 애러 해결을 하였습니다
 
-## 2. ApiV1MappingConfig 설정 시 Mapping 애러 발생
+## 2. JWT Token userId 캐스팅 실패
+- `Integer` -> `Long` 으로 받아 들여서 문제가 생기는 이슈가 발생 하였습니다
+- `Long` 타입 으로 타입 캐스팅이 안되서 생기는 현상 으로 확인 됩니다
 
-## 3. JWT Token userId 캐스팅 실패
+### AS-IS
+```
+return jwtPlugin.validateToken(token).getOrNull()?.payload?.get("userId") as? Long ?: throw RuntimeException("User id is invalid")
+```
+### TO-BE
+```
+return (jwtPlugin.validateToken(token).getOrNull()?.payload?.get("userId") as Int).toLong()
+```
 
-## 4. StarScore 복합키 데이터 베이스 생성시에 null one-to-one property 발생 현상
+## 3. StarScore 복합키 데이터 베이스 생성시에 null one-to-one property 발생 현상
 
 ### 1. Comment -> `EntityNotFoundException unable to find with id 0` 애러 발생
 
@@ -393,8 +409,10 @@ IDE : IntelliJ IDEA 2024.2
 
 Build tool : Gradle.kts
 
-FrameWork : Spring Boot 3.2.5
+FrameWork : Spring Boot 3.3.0
 
 Library : Springdoc 2.5.0
 
 DataBase : PostgresQL 14.1 with Supabase
+
+JWT : jjwt 0.12.5
