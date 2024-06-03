@@ -56,6 +56,9 @@
     <img src="https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary1.png">
     <img src="https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary2.png">
     <img src="https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary3.png">
+    <img src="https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary4.png">
+    <img src="https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary5.png">
+    <img src="https://github.com/gamenome-project/gamenome-project-server/blob/readme/src/main/resources/img/api_spec_summary6.png">
 </div>
 
 </details>
